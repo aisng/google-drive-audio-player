@@ -3,6 +3,7 @@ import Slider from "@mui/material/Slider";
 import VolumeDown from "@mui/icons-material/VolumeDown";
 import VolumeUp from "@mui/icons-material/VolumeUp";
 
+
 const AudioControls = ({
   handlePlayClick = null,
   isPlaying = null,
