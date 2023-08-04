@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+
+      {% block "title" %}{% endblock %}
+
+    </title>
+    {% comment %}
+    {% load bootstrap5 %}
+
+    {% bootstrap_css %}
+    
+    {% endcomment %}
+
+    {% load static %}
+
+    {% block "head" %}
+    {% endblock "head" %}
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  </head>
+  <body>
+    <nav class="mynav">
+      <a class="site-title" href="/">Home</a>
+      <ul>
+
+        {% if user.is_authenticated %}
+          <li>
+            <a href="{% url 'profile' %}">My profile</a>
+          </li>
+          <li>
+            <a href="{% url 'listen' %}">Listen</a>
+          </li>
+          <li>
+            <a href="{% url 'logout' %}?next=/">Logout</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="{% url 'login' %}?next={{ request.path }}">Login</a>
+          </li>
+          <li>
+            <a href="{% url 'register' %}">Register</a>
+          </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+    <div class="container mx-auto">
+
+      {% block "content" %}
+      {% endblock "content" %}
+
+    </div>
+  </body>
+</html>

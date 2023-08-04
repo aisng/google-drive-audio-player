@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block "head" %}
+
+    {% load bootstrap5 %}
+
+    {% bootstrap_css %}
+{% endblock "head" %}
+
+{% block "title" %}Login{% endblock %}
+
+{% block "content" %}
+    {% comment %}
+    {% if login_form.errors %}<p>Incorrect username or password.</p>{% endif %}
+
+    {% if messages %}
+        <ul class="messages">
+
+            {% for message in messages %}
+                <li style="list-style: none" {% if message.tags %}class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+
+        </ul>
+    {% endif %}
+
+    
+    {% endcomment %}
+    <div class="container mx-auto">
+        <h1>Login</h1>
+        {% bootstrap_javascript %}
+        {% bootstrap_messages %}
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            {% bootstrap_form form alert_error_type="all" bound_css_class='' %}
+            <button class="btn btn-dark btn-lg" type="submit">Login</button>
+        </form>
+        <p class="text-center">
+            Forgot your password? <a href="{% url 'reset_password' %}">Reset</a>
+        </p>
+        <p class="text-center">
+            Don't have an account? <a href="{% url 'register' %}">Signup</a>.
+        </p>
+    </div>
+{% endblock "content" %}
