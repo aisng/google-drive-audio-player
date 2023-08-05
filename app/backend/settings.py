@@ -21,12 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-i08f+t=xe@zv506a9pioudhtgu04-^@x_8y8zf*^&e@8aew*&h"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+
+CSRF_COOKIE_DOMAIN = ["127.0.0.1", "localhost"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1337", "http://127.0.0.1:1337"]
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
@@ -166,16 +169,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-CSRF_COOKIE_DOMAIN = "127.0.0.1"
 
-STATIC_URL = "static/"
 # STATICFILES_DIRS = [
 #     BASE_DIR / "../react_page/dist",
 #     BASE_DIR / "../react_page/public",
 # ]
+STATIC_URL = "static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+MEDIA_ROOT = os.path.join(BASE_DIR, "audio_player/media")
+MEDIA_URL = "/media/"
+MEDIA_URL_PROFILE_PICS = "/media/profile_pics/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -186,8 +191,6 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "audio_player/media")
-MEDIA_URL = "/media/"
 
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
 LOGIN_REDIRECT_URL = "/"
