@@ -9,7 +9,7 @@ const getCookie = (name) => {
 const api = PsApiService();
 
 function PsApiService() {
-  const baseUrl = new URL("http://127.0.0.1:8000/api/");
+  const baseUrl = new URL("http://127.0.0.1:1337/api/");
 
   const instance = axios.create({
     baseURL: baseUrl.href,

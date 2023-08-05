@@ -12,7 +12,7 @@ from django.http import StreamingHttpResponse, FileResponse
 from audio_player.models import UserProfile, Comment, Song, User
 from django.core.cache import cache
 
-SONG_URL = "http://127.0.0.1:8000/api/song/"
+SONG_URL = "http://127.0.0.1:1337/api/song/"
 
 
 @api_view(["GET"])

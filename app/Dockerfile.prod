@@ -2,6 +2,15 @@
 # BUILDER #
 ###########
 
+# build react app
+FROM node:20 as builder2
+
+WORKDIR /usr/src/app
+COPY ./react_page/package*.json .
+
+RUN npm install
+RUN npm run build
+
 # pull official base image
 FROM python:3.11.4-slim-buster as builder
 
@@ -26,7 +35,6 @@ RUN flake8 --ignore=E501,F401,W503 .
 COPY ./requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
-
 #########
 # FINAL #
 #########
@@ -49,13 +57,15 @@ RUN mkdir $APP_HOME/mediafiles
 WORKDIR $APP_HOME
 
 
-
 # install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends netcat
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
+
+# copy bundled react
+COPY --from=builder2 /build/dist ./staticfiles
 
 # copy entrypoint.prod.sh
 COPY ./entrypoint.prod.sh .
