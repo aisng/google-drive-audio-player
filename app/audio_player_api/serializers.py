@@ -62,8 +62,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("id", "username", "profile_pic")
 
-    # def get_profile_pic(self, instance):
-    #     return instance.profile.profile_pic.path
     def get_profile_pic(self, instance):
         request = self.context.get("request")
         if instance.profile.profile_pic:

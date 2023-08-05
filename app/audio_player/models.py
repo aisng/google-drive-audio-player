@@ -31,9 +31,6 @@ class Comment(models.Model):
     body = models.TextField("Body", max_length=1000, help_text="Comment body")
     timestamp = models.CharField("Timestamp", max_length=5, null=True, blank=True)
     date_created = models.DateTimeField("Created at", auto_now_add=True)
-    date_updated = models.DateTimeField(
-        "Updated at", auto_now=True, null=True, blank=True
-    )
 
     class Meta:
         ordering = ["-date_created"]

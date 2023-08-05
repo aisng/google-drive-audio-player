@@ -33,7 +33,6 @@ const Listen = () => {
   return (
     <>
       <h1>Listen</h1>
-      <p>Lorem ipsum dolor sit amet.</p>
       <div className="player-interface">
         {songs && (
           <Waveform

@@ -8,7 +8,8 @@ FROM node:20 as builder2
 WORKDIR /usr/src/app
 COPY ./react_page/package*.json .
 
-RUN npm install
+RUN npm ci
+COPY ./react_page ./
 RUN npm run build
 
 # pull official base image
@@ -28,11 +29,11 @@ RUN apt-get update && \
 # lint
 RUN pip install --upgrade pip
 RUN pip install flake8==6.0.0
-COPY . /usr/src/app/
+COPY ./app/ /usr/src/app/
 RUN flake8 --ignore=E501,F401,W503 .
 
 # install python dependencies
-COPY ./requirements.txt .
+COPY ./app/requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 #########
@@ -46,7 +47,7 @@ FROM python:3.11.4-slim-buster
 RUN mkdir -p /home/app
 
 # create the app user
-RUN addgroup --system app && adduser --system --group app
+# RUN addgroup --system app && adduser --system --group app
 
 # create the appropriate directories
 ENV HOME=/home/app
@@ -65,21 +66,21 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
 # copy bundled react
-COPY --from=builder2 /build/dist ./staticfiles
+COPY --from=builder2 /usr/src/app/dist/ ./staticfiles
 
 # copy entrypoint.prod.sh
-COPY ./entrypoint.prod.sh .
+COPY ./app/entrypoint.prod.sh .
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
 RUN chmod +x  $APP_HOME/entrypoint.prod.sh
 
 # copy project
-COPY . $APP_HOME
+COPY ./app $APP_HOME
 
 # chown all the files to the app user
-RUN chown -R app:app $APP_HOME
+# RUN chown -R app:app $APP_HOME
 
 # change to the app user
-USER app
+# USER app
 
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
