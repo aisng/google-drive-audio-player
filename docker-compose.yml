@@ -22,7 +22,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - staticfiles:/staticfiles
+      - ./app:/app
     depends_on:
       - db
     env_file:
@@ -39,5 +39,4 @@ services:
       - POSTGRES_DB=audio_player_db
 
 volumes:
-  staticfiles:
   postgres_data:

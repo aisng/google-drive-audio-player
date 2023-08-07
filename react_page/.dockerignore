@@ -1,5 +1,5 @@
-node_modules/
-dist/
-.swc/
+node_modules
+dist
+.swc
 Dockerfile*
 .dockerignore

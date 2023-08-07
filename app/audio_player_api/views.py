@@ -10,16 +10,19 @@ from audio_player_api.serializers import (
 from .get_drive_data import get_file_list, download_file
 from django.http import StreamingHttpResponse
 from audio_player.models import Comment, Song
+import os
 
-SONG_URL = "http://127.0.0.1:1337/api/song/"
+API_URL = os.environ.get("API_URL")
 
 
 @api_view(["GET"])
 def get_songs(request):
+    song_url_wo_id = API_URL + "/song/"
     file_list_from_drive = get_file_list()
 
+    # create paths for songs for streaming and save their ids and names to db
     for item in file_list_from_drive:
-        item["path"] = SONG_URL + item["id"]
+        item["path"] = song_url_wo_id + item["id"]
         try:
             song = Song.objects.get(pk=item["id"])
         except Song.DoesNotExist:

@@ -24,12 +24,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", default=False)
+DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 CSRF_COOKIE_DOMAIN = ["127.0.0.1", "localhost"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost:1337", "http://127.0.0.1:1337"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:1337",
+    "http://127.0.0.1:1337",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [

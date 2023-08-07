@@ -6,6 +6,14 @@ const cssFileName = "index.min.css";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    host: true,
+    strictPort: true,
+    port: 5173,
+  },
   publicDir: "./public",
   build: {
     rollupOptions: {

@@ -41,7 +41,6 @@ class CommentSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(profile_pic_url)
         return None
 
-
     def create(self, validated_data):
         parent_id = validated_data.pop("parent_id")
         comment = Comment.objects.create(**validated_data)

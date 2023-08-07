@@ -1,13 +1,25 @@
-FROM node:20
+FROM node:20-alpine
 
 WORKDIR /app
+
 COPY package*.json ./
 
 RUN npm ci
+RUN NODE_OPTIONS="--max-old-space-size=4096"
 
 COPY . .
 
 ARG VITE_APP_API_ADDRESS
 ENV VITE_APP_API_ADDRESS $VITE_APP_API_ADDRESS
 
+EXPOSE 5173
+
 CMD ["npm", "run", "dev"]
+# FROM node:20-alpine
+
+# WORKDIR /app
+# COPY . .
+
+# RUN npm install
+
+# CMD ["npm", "run", "dev"]
