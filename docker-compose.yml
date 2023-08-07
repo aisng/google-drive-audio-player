@@ -1,26 +1,43 @@
 version: "3.9"
 
 services:
-  web:
-    build: ./app
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./app/:/usr/src/app/
+  react:
+    container_name: ap-react-dev
+    build:
+      context: ./react_page
+      dockerfile: Dockerfile.dev
+      args:
+        VITE_APP_API_ADDRESS: http://127.0.0.1:8000/api/
     ports:
-      - 8000:8000
-    env_file:
-      - ./.env.dev
+      - "5173:5173"
+    volumes:
+      - ./react_page:/app
+      - /app/node_modules
+
+  django:
+    container_name: ap-django-dev
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - staticfiles:/staticfiles
     depends_on:
       - db
+    env_file:
+      - ./.env.dev
 
   db:
+    container_name: ap-db-dev
     image: postgres:15
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postresql/data/
     environment:
       - POSTGRES_USER=ap_user
       - POSTGRES_PASSWORD=44use98
       - POSTGRES_DB=audio_player_db
 
 volumes:
+  staticfiles:
   postgres_data:

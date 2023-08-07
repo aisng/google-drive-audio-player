@@ -36,14 +36,11 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def get_user_profile_pic(self, instance):
         request = self.context.get("request")
-        # if instance.user.profile:
         if instance.user:
             profile_pic_url = instance.user.profile.profile_pic.url
             return request.build_absolute_uri(profile_pic_url)
         return None
 
-    # def get_user_profile_pic(self, instance):
-    #     return instance.user.profile.profi
 
     def create(self, validated_data):
         parent_id = validated_data.pop("parent_id")

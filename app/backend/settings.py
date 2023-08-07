@@ -177,6 +177,7 @@ INTERNAL_IPS = [
 
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
 LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/login/"
 
 # password reminder
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

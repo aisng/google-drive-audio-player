@@ -45,7 +45,6 @@
                   <th scope="col">Song</th>
                   <th scope="col">Comment</th>
                   <th scope="col">Date added</th>
-                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody class="table-group-divider">
@@ -55,9 +54,6 @@
                     <th scope="row">{{ comment.song.title }}</th>
                     <td>{{ comment }}</td>
                     <td>{{ comment.date_created }}</td>
-                    <td>
-                      <a href="{% url 'profile' %}" class="btn btn-secondary btn-sm" role="button">See comment</a>
-                    </td>
                   </tr>
                 {% endfor %}
 
@@ -101,7 +97,6 @@
                   <th scope="col">Comment author</th>
                   <th scope="col">Comment</th>
                   <th scope="col">Reply</th>
-                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody class="table-group-divider">
@@ -111,9 +106,6 @@
                     <th scope="row">{{ reply.parent.user.username }}</th>
                     <td>{{ reply.parent }}</td>
                     <td>{{ reply }}</td>
-                    <td>
-                      <a href="{% url 'profile' %}" class="btn btn-secondary btn-sm" role="button">See reply</a>
-                    </td>
                   </tr>
                 {% endfor %}
 
