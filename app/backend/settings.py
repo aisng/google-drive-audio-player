@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = bool(os.getenv("DEBUG"))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
@@ -60,7 +60,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    # "whitenoise.middleware.WhiteNoiseMiddleware",
     "djangorestframework_camel_case.middleware.CamelCaseMiddleWare",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -158,10 +157,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / "../react_page/dist",
-#     BASE_DIR / "../react_page/public",
-# ]
+
 STATIC_URL = "static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -179,6 +175,12 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+# add docker network ips for debug=true mode to work properly
+if DEBUG:
+    import socket
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
 
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
 LOGIN_REDIRECT_URL = "/"

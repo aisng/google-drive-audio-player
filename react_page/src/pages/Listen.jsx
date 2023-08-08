@@ -22,17 +22,13 @@ const Listen = () => {
     getSongs().then((response) => {
       setSongs(response.data);
       setCurrentSong(response.data[0]);
-      // streamSong(response.data[0].id).then((res) => {
-      //   // const blob = new Blob([res.data], { type: "audio/mpeg" });
-      //   // console.log(blob);
-      //   // console.log(currentSong);
-      // });
     });
   }, []);
 
   return (
     <>
       <h1>Listen</h1>
+      <p>hi</p>
       <div className="player-interface">
         {songs && (
           <Waveform
@@ -57,11 +53,8 @@ const Listen = () => {
         )}
       </div>
       <div className="comments-section">
-        {/* TODO: currentUserId has to be according to who's logged in */}
         {songs && (
           <Comments
-            // currentUserId={currentUser.id}
-            // currentUsername={currentUser.username}
             currentSongId={currentSong.id}
             currentUser={currentUser}
             timestamp={timestamp}

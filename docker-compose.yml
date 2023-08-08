@@ -13,6 +13,8 @@ services:
     volumes:
       - ./react_page:/app
       - /app/node_modules
+    # stdin_open: true
+    # tty: true
 
   django:
     container_name: ap-django-dev

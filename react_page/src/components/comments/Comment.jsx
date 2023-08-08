@@ -1,12 +1,9 @@
 import CommentForm from "./CommentForm";
 
-// const userIcon = "user-icon.png";
-
 const Comment = ({
   comment,
   replies,
   userIcon,
-  currentUserId,
   currentUser,
   deleteComment,
   updateComment,
@@ -19,7 +16,6 @@ const Comment = ({
   const canReply = Boolean(currentUser.id);
   const canEdit = currentUser.id === comment.userId;
   const canDelete = currentUser.id === comment.userId;
-  // const userIconPath = currentUser.profilePic;
 
   const createdAt =
     new Date(comment.dateCreated).toLocaleDateString("lt-LT") +

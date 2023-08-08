@@ -8,13 +8,7 @@ import {
   updateComment,
 } from "../../apiService";
 
-const Comments = ({
-  currentUserId,
-  currentUsername,
-  currentUser,
-  currentSongId,
-  timestamp,
-}) => {
+const Comments = ({ currentUser, currentSongId, timestamp }) => {
   const [backendComments, setBackendComments] = useState([]);
   const [activeComment, setActiveComment] = useState(null);
   const rootComments = backendComments.filter(
@@ -22,7 +16,7 @@ const Comments = ({
       backendComment.parentId === null &&
       backendComment.songId === currentSongId
   );
-  // console.log(backendComments);
+
   const getReplies = (commentId) => {
     return backendComments
       .filter((backendComment) => backendComment.parentId === commentId)
@@ -31,7 +25,7 @@ const Comments = ({
           new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
       );
   };
-  // TODO: remove hardcoded username when login is present
+
   const handleCommentSubmit = (
     text,
     parentId = null,
@@ -40,7 +34,6 @@ const Comments = ({
   ) => {
     const commentData = {
       body: text,
-      // username: currentUsername,
       user_id: currentUser.id,
       parent_id: parentId,
       timestamp: timestamp,
@@ -85,7 +78,6 @@ const Comments = ({
 
   useEffect(() => {
     getComments().then((response) => {
-      // console.log(response.data);
       setBackendComments(response.data);
     });
   }, []);
@@ -104,10 +96,8 @@ const Comments = ({
           <Comment
             key={rootComment.id}
             comment={rootComment}
-            // this doesn't work - picture is the same as current_user
             userIcon={rootComment.userProfilePic}
             replies={getReplies(rootComment.id)}
-            // currentUserId={currentUser.id}
             currentUser={currentUser}
             deleteComment={handleCommentDelete}
             updateComment={handleCommentUpdate}

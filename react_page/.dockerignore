@@ -3,3 +3,4 @@ dist
 .swc
 Dockerfile*
 .dockerignore
+package-lock.json

@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   web:
+    container_name: audio-player-web
     build:
       context: .
       dockerfile: ./app/Dockerfile.prod
@@ -19,6 +20,7 @@ services:
       - db
 
   db:
+    container_name: audio-player-db
     image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -26,6 +28,7 @@ services:
       - ./.env.prod.db
 
   nginx:
+    container_name: audio-player-nginx
     build: ./nginx
     volumes:
       - static_volume:/home/app/web/staticfiles
