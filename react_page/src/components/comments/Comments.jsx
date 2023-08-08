@@ -16,6 +16,7 @@ const Comments = ({ currentUser, currentSongId, timestamp }) => {
       backendComment.parentId === null &&
       backendComment.songId === currentSongId
   );
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const getReplies = (commentId) => {
     return backendComments
@@ -77,8 +78,31 @@ const Comments = ({ currentUser, currentSongId, timestamp }) => {
   };
 
   useEffect(() => {
+    const hash = window.location.hash;
+    if (dataLoaded && hash) {
+      console.log(hash);
+      const elementToScrollTo = document.getElementById(hash.slice(1));
+      elementToScrollTo.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      elementToScrollTo.style.backgroundColor = "#ffffe0";
+      elementToScrollTo.style.transition = "background-color 0.3s ease";
+      setTimeout(() => {
+        elementToScrollTo.style.backgroundColor = "";
+      }, 1000);
+      window.history.replaceState(
+        null,
+        null,
+        location.pathname + location.search
+      );
+    }
+  }, [dataLoaded]);
+
+  useEffect(() => {
     getComments().then((response) => {
       setBackendComments(response.data);
+      setDataLoaded(true);
     });
   }, []);
 
@@ -94,6 +118,7 @@ const Comments = ({ currentUser, currentSongId, timestamp }) => {
       <div className="comments-container">
         {rootComments.map((rootComment) => (
           <Comment
+            id={rootComment.id + "c"}
             key={rootComment.id}
             comment={rootComment}
             userIcon={rootComment.userProfilePic}

@@ -219,6 +219,14 @@ nav li:hover {
   margin-right: 0.25rem;
 }
 
+.comment-author:hover {
+  cursor: pointer;
+}
+
+.comment-author {
+  text-decoration: underline;
+}
+
 .comment-date {
   margin-left: auto;
   font-size: 0.97rem;

@@ -18,125 +18,149 @@
       {% bootstrap_javascript %}
       {% bootstrap_messages %}
       <div class="col-sm-2 my-auto d-flex justify-content-center">
-        <img class="rounded-circle account-img" src="{{ user.profile.profile_pic.url }}">
+        <img class="rounded-circle account-img" src="{{ user_profile_viewed.profile.profile_pic.url }}">
       </div>
       <div class="col-sm-10 my-auto">
         <div class="row">
-          <h2 class="account-heading">{{ user.username }}</h2>
-          <p class="text-secondary">{{ user.email }}</p>
+          <h2 class="account-heading">{{ user_profile_viewed.username }}</h2>
+          <p class="text-secondary">{{ user_profile_viewed.email }}</p>
         </div>
         <div class="row">
-          <div>
-            <a class="btn btn-dark btn-sm" href="{% url 'edit_profile' %}">Edit profile</a>
-          </div>
+
+          {% if user_profile_viewed == user %}
+            <div>
+              <a class="btn btn-dark btn-sm" href="{% url 'edit_profile' %}">Edit profile</a>
+            </div>
+          {% endif %}
+
         </div>
       </div>
     </div>
     <div class="mt-5">
-      <h3>Your activity</h3>
+
+      {% if user_profile_viewed == user %}
+        <h3>Your activity</h3>
+      {% else %}
+        <h3>{{ user_profile_viewed }}'s activity</h3>
+      {% endif %}
+
       <div>
         <h4>Comments</h4>
 
         {% if user_comments %}
-          <ul>
-            <table class="table mt-3 mb-3">
-              <thead>
-                <tr>
-                  <th scope="col">Song</th>
-                  <th scope="col">Comment</th>
-                  <th scope="col">Date added</th>
-                </tr>
-              </thead>
-              <tbody class="table-group-divider">
+          <table class="table mt-3 mb-3">
+            <thead>
+              <tr>
+                <th scope="col">Song</th>
+                <th scope="col">Comment</th>
+                <th scope="col">Date added</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
 
-                {% for comment in user_comments %}
-                  <tr>
-                    <th scope="row">{{ comment.song.title }}</th>
-                    <td>{{ comment }}</td>
-                    <td>{{ comment.date_created }}</td>
-                  </tr>
+              {% for comment in user_comments %}
+                <tr>
+                  <th scope="row">{{ comment.song.title }}</th>
+                  <td>{{ comment }}</td>
+                  <td>{{ comment.date_created }}</td>
+                  <td>
+                    <a href="{% url 'listen' %}#{{ comment.id }}c" id="see-comment" class="btn btn-secondary btn-sm" role="button">See comment</a>
+                  </td>
+                </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+          <div class="container">
+
+            {% if user_comments.has_other_pages %}
+              <ul class="pagination pagination-sm justify-content-end">
+
+                {% for i in user_comments.paginator.page_range %}
+
+                  {% if user_comments.number == i %}
+                    <li class="page-item active">
+                      <a class="page-link">{{ i }}</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page_comm={{ i }}&page_rep={{ request.GET.page_rep }}">{{ i }}</a>
+                    </li>
+                  {% endif %}
+
                 {% endfor %}
 
-              </tbody>
-            </table>
-            <div class="container">
+              </ul>
+            {% endif %}
 
-              {% if user_comments.has_other_pages %}
-                <ul class="pagination pagination-sm justify-content-end">
-
-                  {% for i in user_comments.paginator.page_range %}
-
-                    {% if user_comments.number == i %}
-                      <li class="page-item active">
-                        <a class="page-link">{{ i }}</a>
-                      </li>
-                    {% else %}
-                      <li class="page-item">
-                        <a class="page-link" href="?page_comm={{ i }}&page_rep={{ request.GET.page_rep }}">{{ i }}</a>
-                      </li>
-                    {% endif %}
-
-                  {% endfor %}
-
-                </ul>
-              {% endif %}
-
-            </div>
-          </ul>
+          </div>
         {% else %}
-          <p>You have not yet commented.</p>
+
+          {% if user_profile_viewed == user %}
+            <p>You have not yet commented.</p>
+          {% else %}
+            <p>{{ user_profile_viewed }} has not yet commented.</p>
+          {% endif %}
         {% endif %}
 
         <h4>Replies</h4>
 
         {% if user_replies %}
-          <ul>
-            <table class="table mt-3 mb-3">
-              <thead>
-                <tr>
-                  <th scope="col">Comment author</th>
-                  <th scope="col">Comment</th>
-                  <th scope="col">Reply</th>
-                </tr>
-              </thead>
-              <tbody class="table-group-divider">
+          <table class="table mt-3 mb-3">
+            <thead>
+              <tr>
+                <th scope="col">Comment author</th>
+                <th scope="col">Comment</th>
+                <th scope="col">Reply</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
 
-                {% for reply in user_replies %}
-                  <tr>
-                    <th scope="row">{{ reply.parent.user.username }}</th>
-                    <td>{{ reply.parent }}</td>
-                    <td>{{ reply }}</td>
-                  </tr>
+              {% for reply in user_replies %}
+                <tr>
+                  <th scope="row">{{ reply.parent.user.username }}</th>
+                  <td>{{ reply.parent }}</td>
+                  <td>{{ reply }}</td>
+                  <td>
+                    <a href="{% url 'listen' %}#{{ reply.id }}r" id="see-reply" class="btn btn-secondary btn-sm" role="button">See reply</a>
+                  </td>
+                </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+          <div class="container">
+
+            {% if user_replies.has_other_pages %}
+              <ul class="pagination pagination-sm justify-content-end">
+
+                {% for i in user_replies.paginator.page_range %}
+
+                  {% if user_replies.number == i %}
+                    <li class="page-item active">
+                      <a class="page-link">{{ i }}</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page_rep={{ i }}&page_comm={{ request.GET.page_comm }}">{{ i }}</a>
+                    </li>
+                  {% endif %}
+
                 {% endfor %}
 
-              </tbody>
-            </table>
-            <div class="container">
+              </ul>
+            {% endif %}
 
-              {% if user_replies.has_other_pages %}
-                <ul class="pagination pagination-sm justify-content-end">
-
-                  {% for i in user_replies.paginator.page_range %}
-
-                    {% if user_replies.number == i %}
-                      <li class="page-item active">
-                        <a class="page-link">{{ i }}</a>
-                      </li>
-                    {% else %}
-                      <li class="page-item">
-                        <a class="page-link" href="?page_rep={{ i }}&page_comm={{ request.GET.page_comm }}">{{ i }}</a>
-                      </li>
-                    {% endif %}
-
-                  {% endfor %}
-
-                </ul>
-              {% endif %}
-
-            </div>
-          </ul>
+          </div>
         {% else %}
-          <p>You have not yet replied to any comments.</p>
+
+          {% if user_profile_viewed == user %}
+            <p>You have not yet replied to any comments.</p>
+          {% else %}
+            <p>{{ user_profile_viewed }} has not yet replied to any comments.</p>
+          {% endif %}
         {% endif %}
 
       </div>

@@ -2,7 +2,7 @@ import Waveform from "../components/Waveform";
 import Playlist from "../components/Playlist";
 import Comments from "../components/comments/Comments";
 import { useState, useEffect } from "react";
-import { getSongs, streamSong, getCurrentUser } from "../apiService";
+import { getSongs, getCurrentUser } from "../apiService";
 import { CircularProgress } from "@mui/material";
 
 const Listen = () => {
@@ -28,7 +28,6 @@ const Listen = () => {
   return (
     <>
       <h1>Listen</h1>
-      <p>hi</p>
       <div className="player-interface">
         {songs && (
           <Waveform

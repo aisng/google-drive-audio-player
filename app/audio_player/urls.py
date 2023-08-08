@@ -7,7 +7,7 @@ from .forms import EmailValidationOnForgotPassword
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("profile/", views.user_profile, name="profile"),
+    path("profile/<str:username>", views.user_profile, name="profile"),
     path("profile/edit/", views.edit_user_profile, name="edit_profile"),
     path("register/", views.register_request, name="register"),
     path(

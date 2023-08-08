@@ -1,6 +1,6 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import RegistrationForm, UpdateProfileForm, UpdateUserForm
 from django.core.paginator import Paginator
-from .models import Comment
+from .models import Comment, UserProfile
 
 # Create your views here.
 
@@ -21,10 +21,18 @@ def index(request):
 
 
 @login_required
-def user_profile(request):
-    user_comments = Comment.objects.filter(user=request.user, parent__isnull=True)
-    user_replies = Comment.objects.filter(user=request.user, parent__isnull=False)
-
+def user_profile(request, username):
+    user_profile_viewed = get_object_or_404(User, username=username)
+    if request.user.username == user_profile_viewed:
+        user_comments = Comment.objects.filter(user=request.user, parent__isnull=True)
+        user_replies = Comment.objects.filter(user=request.user, parent__isnull=False)
+    else:
+        user_comments = Comment.objects.filter(
+            user=user_profile_viewed, parent__isnull=True
+        )
+        user_replies = Comment.objects.filter(
+            user=user_profile_viewed, parent__isnull=False
+        )
     comments_paginator = Paginator(user_comments, 5)
     replies_paginator = Paginator(user_replies, 5)
     comments_page_number = request.GET.get("page_comm")
@@ -35,7 +43,11 @@ def user_profile(request):
     return render(
         request,
         "user_profile.html",
-        {"user_comments": paged_comments, "user_replies": paged_replies},
+        {
+            "user_comments": paged_comments,
+            "user_replies": paged_replies,
+            "user_profile_viewed": user_profile_viewed,
+        },
     )
 
 
@@ -51,7 +63,9 @@ def edit_user_profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request, "Your profile is updated successfully")
-            return redirect("profile")
+            return redirect(
+                reverse("profile", kwargs={"username": request.user.username})
+            )
     else:
         user_form = UpdateUserForm(instance=request.user)
         profile_form = UpdateProfileForm(instance=request.user.profile)

@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 from audio_player.models import UserProfile, Comment, Song, User
@@ -9,6 +10,7 @@ class CommentSerializer(serializers.ModelSerializer):
     parent_id = serializers.IntegerField(write_only=False, allow_null=True)
     username = serializers.SerializerMethodField(write_only=False)
     user_profile_pic = serializers.SerializerMethodField()
+    user_profile_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
@@ -22,6 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "date_created",
             "user_profile_pic",
             "timestamp",
+            "user_profile_url",
         )
 
     def get_parent_id(self, instance):
@@ -39,6 +42,15 @@ class CommentSerializer(serializers.ModelSerializer):
         if instance.user:
             profile_pic_url = instance.user.profile.profile_pic.url
             return request.build_absolute_uri(profile_pic_url)
+        return None
+
+    def get_user_profile_url(self, instance):
+        request = self.context.get("request")
+        if instance.user:
+            profile_url = reverse(
+                "profile", kwargs={"username": instance.user.username}
+            )
+            return request.build_absolute_uri(profile_url)
         return None
 
     def create(self, validated_data):

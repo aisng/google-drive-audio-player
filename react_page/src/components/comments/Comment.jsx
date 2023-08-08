@@ -1,6 +1,7 @@
 import CommentForm from "./CommentForm";
 
 const Comment = ({
+  id,
   comment,
   replies,
   userIcon,
@@ -34,15 +35,24 @@ const Comment = ({
 
   const replyId = parentId ? parentId : comment.id;
 
+  const handleUsernameClick = (url) => {
+    window.location.href = url;
+  };
+
   return (
     <>
-      <div className="comment">
+      <div className="comment" id={id}>
         <div className="comment-image-container">
           <img src={userIcon} />
         </div>
         <div className="comment-right-part">
           <div className="comment-content">
-            <p className="comment-author">{comment.username}</p>
+            <span
+              onClick={() => handleUsernameClick(comment.userProfileUrl)}
+              className="comment-author"
+            >
+              {comment.username}
+            </span>
             {comment.timestamp && (
               <p className="comment-timestamp">at {comment.timestamp} </p>
             )}
@@ -100,6 +110,7 @@ const Comment = ({
         <div className="replies">
           {replies.map((reply) => (
             <Comment
+              id={reply.id + "r"}
               comment={reply}
               key={reply.id}
               replies={[]}
