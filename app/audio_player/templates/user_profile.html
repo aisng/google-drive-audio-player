@@ -65,7 +65,10 @@
                   <td>{{ comment }}</td>
                   <td>{{ comment.date_created }}</td>
                   <td>
-                    <a href="{% url 'listen' %}#{{ comment.id }}c" id="see-comment" class="btn btn-secondary btn-sm" role="button">See comment</a>
+                    <a href="{% url 'listen' %}#{{ comment.id }}c/{{ comment.song_id }}"
+                       id="see-comment"
+                       class="btn btn-secondary btn-sm"
+                       role="button">See comment</a>
                   </td>
                 </tr>
               {% endfor %}
@@ -124,7 +127,10 @@
                   <td>{{ reply.parent }}</td>
                   <td>{{ reply }}</td>
                   <td>
-                    <a href="{% url 'listen' %}#{{ reply.id }}r" id="see-reply" class="btn btn-secondary btn-sm" role="button">See reply</a>
+                    <a href="{% url 'listen' %}#{{ reply.id }}r/{{ reply.parent.song_id }}"
+                       id="see-reply"
+                       class="btn btn-secondary btn-sm"
+                       role="button">See reply</a>
                   </td>
                 </tr>
               {% endfor %}

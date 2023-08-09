@@ -225,6 +225,7 @@ nav li:hover {
 
 .comment-author {
   text-decoration: underline;
+  text-underline-offset: 0.07rem;
 }
 
 .comment-date {

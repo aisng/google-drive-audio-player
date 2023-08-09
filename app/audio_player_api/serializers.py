@@ -81,4 +81,4 @@ class UserSerializer(serializers.ModelSerializer):
 class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ("id", "title")
+        fields = ("id", "title", "path")

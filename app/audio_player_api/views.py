@@ -7,6 +7,7 @@ from audio_player_api.serializers import (
     CommentSerializer,
     SongSerializer,
 )
+from rest_framework.views import APIView
 from .get_drive_data import get_file_list, download_file
 from django.http import StreamingHttpResponse
 from audio_player.models import Comment, Song
@@ -17,18 +18,20 @@ API_URL = os.environ.get("API_URL")
 
 @api_view(["GET"])
 def get_songs(request):
-    song_url_wo_id = API_URL + "/song/"
+    song_url_wo_id = API_URL + "/stream/"
     file_list_from_drive = get_file_list()
 
     # create paths for songs for streaming and save their ids and names to db
     for item in file_list_from_drive:
         item["path"] = song_url_wo_id + item["id"]
+        item["title"] = item["name"]
+        del item["name"]
         try:
             song = Song.objects.get(pk=item["id"])
         except Song.DoesNotExist:
-            song = Song(id=item["id"], title=item["name"])
+            song = Song(id=item["id"], title=item["name"], path=item["path"])
             song.save()
-            # serializer = SongSerializer(data=song_data)
+            # serializer = SongSerializer(data=song)
             # if serializer.is_valid():
             #     serializer.save()
     return Response(file_list_from_drive)
@@ -38,6 +41,14 @@ def get_songs(request):
 def stream_song(request, id):
     audio_file = download_file(id)
     return StreamingHttpResponse(audio_file, content_type="audio/mpeg")
+
+
+class SongDetail(generics.RetrieveAPIView):
+    serializer_class = SongSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return Song.objects.get(pk=self.kwargs["pk"])
 
 
 class CurrentUser(generics.RetrieveAPIView):

@@ -8,7 +8,12 @@ import {
   updateComment,
 } from "../../apiService";
 
-const Comments = ({ currentUser, currentSongId, timestamp }) => {
+const Comments = ({
+  currentUser,
+  currentSongId,
+  timestamp,
+  commentToScrollTo,
+}) => {
   const [backendComments, setBackendComments] = useState([]);
   const [activeComment, setActiveComment] = useState(null);
   const rootComments = backendComments.filter(
@@ -17,7 +22,7 @@ const Comments = ({ currentUser, currentSongId, timestamp }) => {
       backendComment.songId === currentSongId
   );
   const [dataLoaded, setDataLoaded] = useState(false);
-
+  // console.log(commentToScrollTo.slice(1));
   const getReplies = (commentId) => {
     return backendComments
       .filter((backendComment) => backendComment.parentId === commentId)
@@ -78,10 +83,12 @@ const Comments = ({ currentUser, currentSongId, timestamp }) => {
   };
 
   useEffect(() => {
-    const hash = window.location.hash;
-    if (dataLoaded && hash) {
-      console.log(hash);
-      const elementToScrollTo = document.getElementById(hash.slice(1));
+    // const hash = window.location.hash;
+    if (dataLoaded && commentToScrollTo) {
+      // console.log(hash.split("/")[0]);
+      const elementToScrollTo = document.getElementById(
+        commentToScrollTo.slice(1)
+      );
       elementToScrollTo.scrollIntoView({
         behavior: "smooth",
         block: "start",

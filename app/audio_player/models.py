@@ -45,3 +45,5 @@ class Comment(models.Model):
 class Song(models.Model):
     id = models.CharField(primary_key=True, max_length=100)
     title = models.CharField("Title", max_length=150)
+    # ar geriau db saugot path, ar serializery padaryt?
+    path = models.CharField("Path", max_length=250, null=True, blank=True)

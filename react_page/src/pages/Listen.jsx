@@ -2,7 +2,7 @@ import Waveform from "../components/Waveform";
 import Playlist from "../components/Playlist";
 import Comments from "../components/comments/Comments";
 import { useState, useEffect } from "react";
-import { getSongs, getCurrentUser } from "../apiService";
+import { getSongs, getSong, getCurrentUser } from "../apiService";
 import { CircularProgress } from "@mui/material";
 
 const Listen = () => {
@@ -10,19 +10,31 @@ const Listen = () => {
   const [currentSong, setCurrentSong] = useState(null);
   const [timestamp, setTimestamp] = useState();
   const [currentUser, setCurrentUser] = useState(null);
+  const [commentToScrollTo, setCommentToScrollTo] = useState("");
 
   const handleSongClick = (song) => {
     setCurrentSong(song);
   };
 
   useEffect(() => {
+    const hash = window.location.hash;
     getCurrentUser().then((res) => {
       setCurrentUser(res.data);
     });
     getSongs().then((response) => {
       setSongs(response.data);
-      setCurrentSong(response.data[0]);
+      if (!hash) {
+        setCurrentSong(response.data[0]);
+      }
     });
+
+    if (hash) {
+      const commentSong = hash.split("/")[1];
+      setCommentToScrollTo(hash.split("/")[0]);
+      getSong(commentSong).then((res) => {
+        setCurrentSong(res.data);
+      });
+    }
   }, []);
 
   return (
@@ -54,6 +66,7 @@ const Listen = () => {
       <div className="comments-section">
         {songs && (
           <Comments
+            commentToScrollTo={commentToScrollTo}
             currentSongId={currentSong.id}
             currentUser={currentUser}
             timestamp={timestamp}

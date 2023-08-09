@@ -10,7 +10,7 @@ const Playlist = ({ handleSongClick, currentSongId, songs }) => {
               key={song.id}
               onClick={() => handleSongClick(song)}
             >
-              {song.name}
+              {song.title}
             </li>
           ))}
         </ul>

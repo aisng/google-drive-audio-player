@@ -27,8 +27,12 @@ export const getSongs = () => {
   return api.get("/songs");
 };
 
-export const streamSong = (songId) => {
+export const getSong = (songId) => {
   return api.get(`/song/${songId}`);
+};
+
+export const streamSong = (songId) => {
+  return api.get(`/stream/${songId}`);
 };
 
 export const getComments = () => {

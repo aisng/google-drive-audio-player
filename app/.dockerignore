@@ -1,5 +1,7 @@
-**/node_modules
-**/react_page
-Dockerfile*
+**/*node_modules
+**/*react_page
+Dockerfile.*
 .dockerignore
 .swc
+**/*__pycache__
+**/.git*
