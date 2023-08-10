@@ -123,7 +123,10 @@
 
               {% for reply in user_replies %}
                 <tr>
-                  <th scope="row">{{ reply.parent.user.username }}</th>
+                  <th scope="row">
+                    <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                       href="{% url 'profile' username=reply.parent.user.username %}">{{ reply.parent.user.username }}</a>
+                  </th>
                   <td>{{ reply.parent }}</td>
                   <td>{{ reply }}</td>
                   <td>

@@ -7,7 +7,6 @@ from audio_player_api.serializers import (
     CommentSerializer,
     SongSerializer,
 )
-from rest_framework.views import APIView
 from .get_drive_data import get_file_list, download_file
 from django.http import StreamingHttpResponse
 from audio_player.models import Comment, Song
@@ -20,21 +19,21 @@ API_URL = os.environ.get("API_URL")
 def get_songs(request):
     song_url_wo_id = API_URL + "/stream/"
     file_list_from_drive = get_file_list()
-
-    # create paths for songs for streaming and save their ids and names to db
+    # file_list_from_drive = []  # testing purposes
+    # create paths for songs for streaming and save their info in db
     for item in file_list_from_drive:
-        item["path"] = song_url_wo_id + item["id"]
-        item["title"] = item["name"]
-        del item["name"]
         try:
-            song = Song.objects.get(pk=item["id"])
+            Song.objects.get(pk=item["id"])
         except Song.DoesNotExist:
-            song = Song(id=item["id"], title=item["name"], path=item["path"])
-            song.save()
-            # serializer = SongSerializer(data=song)
-            # if serializer.is_valid():
-            #     serializer.save()
-    return Response(file_list_from_drive)
+            item["path"] = song_url_wo_id + item["id"]
+            item["title"] = item["name"]
+            del item["name"]
+            serializer = SongSerializer(data=item)
+            if serializer.is_valid():
+                serializer.save()
+
+    all_songs = Song.objects.all()
+    return Response(SongSerializer(all_songs, many=True).data)
 
 
 @api_view(["GET"])

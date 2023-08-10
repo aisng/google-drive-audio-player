@@ -4,4 +4,4 @@ Dockerfile.*
 .dockerignore
 .swc
 **/*__pycache__
-**/.git*
+**/.git/**

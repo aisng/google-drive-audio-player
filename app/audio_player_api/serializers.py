@@ -1,7 +1,6 @@
 from django.urls import reverse
 from rest_framework import serializers
-from rest_framework.fields import CurrentUserDefault
-from audio_player.models import UserProfile, Comment, Song, User
+from audio_player.models import Comment, Song, User
 
 
 class CommentSerializer(serializers.ModelSerializer):

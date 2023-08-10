@@ -94,9 +94,12 @@ const Comments = ({
         block: "start",
       });
       elementToScrollTo.style.backgroundColor = "#ffffe0";
-      elementToScrollTo.style.transition = "background-color 0.3s ease";
+      elementToScrollTo.style.borderRadius = "1.5rem";
+      elementToScrollTo.style.transition = "background-color 0.6s ease-in-out";
       setTimeout(() => {
         elementToScrollTo.style.backgroundColor = "";
+        elementToScrollTo.style.borderRadius = "";
+        elementToScrollTo.style.transition = "";
       }, 1000);
       window.history.replaceState(
         null,

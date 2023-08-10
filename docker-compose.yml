@@ -38,7 +38,7 @@ services:
     environment:
       - POSTGRES_USER=ap_user
       - POSTGRES_PASSWORD=44use98
-      - POSTGRES_DB=audio_player_db
+      - POSTGRES_DB=audio-player-db
 
 volumes:
   postgres_data:

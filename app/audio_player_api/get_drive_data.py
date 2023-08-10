@@ -67,6 +67,7 @@ def get_file_list():
     except HttpError as error:
         # TODO(developer) - Handle errors from drive API.
         print(f"An error occurred: {error}")
+        return []
     return items
 
 
