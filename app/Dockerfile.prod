@@ -13,7 +13,7 @@ COPY ./react_page ./
 
 ARG VITE_APP_API_ADDRESS
 ENV VITE_APP_API_ADDRESS $VITE_APP_API_ADDRESS
-RUN addgroup -S ap_group && adduser -S -G ap_group ap_user
+# RUN addgroup -S ap_group && adduser -S -G ap_group ap_user
 
 RUN npm run build
 

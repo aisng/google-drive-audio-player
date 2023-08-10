@@ -36,7 +36,7 @@ class Comment(models.Model):
         ordering = ["-date_created"]
 
     def __str__(self):
-        return f"{self.body}" if len(self.body) < 30 else f"{self.body}"
+        return f"{self.body}" if len(self.body) <= 30 else f"{self.body[:30]}..."
 
     def get_replies(self):
         return self.replies.all()
@@ -45,5 +45,4 @@ class Comment(models.Model):
 class Song(models.Model):
     id = models.CharField(primary_key=True, max_length=100)
     title = models.CharField("Title", max_length=150)
-    # ar geriau db saugot path, ar serializery padaryt?
     path = models.CharField("Path", max_length=250, null=True, blank=True)

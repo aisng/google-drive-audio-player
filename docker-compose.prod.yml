@@ -1,8 +1,9 @@
 version: "3.9"
+name: google-drive-audio-player
 
 services:
   web:
-    container_name: audio-player-web
+    container_name: gdap-web
     build:
       context: .
       dockerfile: ./app/Dockerfile.prod
@@ -20,15 +21,15 @@ services:
       - db
 
   db:
-    container_name: audio-player-db
     image: postgres:15
+    container_name: gdap-db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env.prod.db
 
   nginx:
-    container_name: audio-player-nginx
+    container_name: gdap-nginx
     build: ./nginx
     volumes:
       - static_volume:/home/app/web/staticfiles

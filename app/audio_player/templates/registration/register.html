@@ -12,18 +12,6 @@
 {% block "content" %}
     <div class="container">
         <h1>Register</h1>
-        {% comment %}
-        {% if messages %}
-            <ul class="messages">
-
-                {% for message in messages %}
-                    <li style="list-style: none" {% if message.tags %}class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-
-            </ul>
-        {% endif %}
-
-        {% endcomment %}
         {% bootstrap_javascript %}
         {% bootstrap_messages %}
         <form method="post">

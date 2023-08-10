@@ -4,19 +4,18 @@ from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import RegistrationForm, UpdateProfileForm, UpdateUserForm
 from django.core.paginator import Paginator
-from .models import Comment, UserProfile
+from .models import Comment
 
 # Create your views here.
 
 
 def index(request):
-    print("___INDEX___current user___:", request.user)
     return render(request, "index.html")
 
 
@@ -108,6 +107,12 @@ def login_request(request):
     elif request.method == "GET":
         form = AuthenticationForm()
     return render(request, "registration/login.html", context={"form": form})
+
+
+# def logout_request(request):
+#     logout(request)
+#     messages.info(request, "You have been succesfully logged out.")
+#     return render(request, "registration/logout.html")
 
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):

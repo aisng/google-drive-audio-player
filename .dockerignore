@@ -1,0 +1,9 @@
+.git
+.vscode
+**/.*ignore
+.env
+docker-compose*.yml
+**/Dockerfile*
+*.md
+**/node_modules
+**/.swc
