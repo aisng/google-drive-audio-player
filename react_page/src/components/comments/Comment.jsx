@@ -1,4 +1,5 @@
 import CommentForm from "./CommentForm";
+import { useState } from "react";
 
 const Comment = ({
   id,
@@ -14,6 +15,7 @@ const Comment = ({
   parentId = null,
   currentAudioId,
 }) => {
+  // const [hasCancelButton, setHasCancelButton] = useState(false);
   const canReply = Boolean(currentUser.id);
   const canEdit = currentUser.id === comment.userId;
   const canDelete = currentUser.id === comment.userId;
@@ -39,6 +41,10 @@ const Comment = ({
     window.location.href = url;
   };
 
+  const handleCancel = () => {
+    setActiveComment(null);
+  };
+
   return (
     <>
       <div className="comment" id={id}>
@@ -62,10 +68,10 @@ const Comment = ({
           {isEditing && (
             <CommentForm
               submitLabel="Update"
-              hasCancelButton
+              hasCancelButton={true}
               initialText={comment.body}
               handleSubmit={(text) => updateComment(comment.id, text)}
-              handleCancel={() => setActiveComment(null)}
+              handleCancel={handleCancel}
             />
           )}
           <div className="comment-actions">
@@ -101,7 +107,9 @@ const Comment = ({
           {isReplying && (
             <CommentForm
               submitLabel="Reply"
+              hasCancelButton
               handleSubmit={(text) => addComment(text, replyId)}
+              handleCancel={handleCancel}
             />
           )}
         </div>
