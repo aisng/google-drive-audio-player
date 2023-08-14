@@ -22,13 +22,14 @@ const Comments = ({
       backendComment.songId === currentSongId
   );
   const [dataLoaded, setDataLoaded] = useState(false);
-  // console.log(commentToScrollTo.slice(1));
+  // const [hasCancelButton, setHasCancelButton] = useState(false);
+
   const getReplies = (commentId) => {
     return backendComments
       .filter((backendComment) => backendComment.parentId === commentId)
       .sort(
         (a, b) =>
-          new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+          new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime()
       );
   };
 
@@ -82,6 +83,12 @@ const Comments = ({
     });
   };
 
+  const handleCancel = () => {
+    if (activeComment) {
+      setActiveComment(null);
+    }
+  };
+
   useEffect(() => {
     // const hash = window.location.hash;
     if (dataLoaded && commentToScrollTo) {
@@ -123,12 +130,15 @@ const Comments = ({
         handleSubmit={handleCommentSubmit}
         currentSongId={currentSongId}
         timestamp={timestamp}
+        // onFocus={() => setHasCancelButton(true)}
+        // hasCancelButton
+        handleCancel={handleCancel}
       />
       <h3 className="comments-title">Comments</h3>
       <div className="comments-container">
         {rootComments.map((rootComment) => (
           <Comment
-            id={rootComment.id + "c"}
+            id={rootComment.id + "c"} // + "c" for locating the comment from hash
             key={rootComment.id}
             comment={rootComment}
             userIcon={rootComment.userProfilePic}
@@ -140,6 +150,7 @@ const Comments = ({
             setActiveComment={setActiveComment}
             addComment={handleCommentSubmit}
             currentSongId={currentSongId}
+            handleCancel={handleCancel}
           />
         ))}
       </div>

@@ -35,13 +35,7 @@ const CommentForm = ({
         onChange={(e) => setText(e.target.value)}
         placeholder="Write a comment..."
       ></textarea>
-      <button
-        type="submit"
-        className="comment-form-button"
-        disabled={isTextAreaDisabled}
-      >
-        {submitLabel}
-      </button>
+
       {hasCancelButton && (
         <button
           type="button"
@@ -52,6 +46,13 @@ const CommentForm = ({
           Cancel
         </button>
       )}
+      <button
+        type="submit"
+        className="comment-form-button comment-form-button-submit"
+        disabled={isTextAreaDisabled}
+      >
+        {submitLabel}
+      </button>
     </form>
   );
 };

@@ -52,7 +52,7 @@ FROM python:3.11-slim-bookworm
 RUN mkdir -p /home/app
 
 # create the app user
-RUN addgroup --system ap_group && adduser --system --group ap_user
+RUN addgroup --system gdap_group && adduser --system --group gdap_user
 
 # create the appropriate directories
 ENV HOME=/home/app
@@ -71,7 +71,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
 # copy bundled react
-COPY --from=builder2 --chown=ap_user:ap_group /usr/src/app/dist/ ./staticfiles
+COPY --from=builder2 --chown=gdap_user:gdap_group /usr/src/app/dist/ ./staticfiles
 
 # copy entrypoint.prod.sh
 COPY ./app/entrypoint.prod.sh .
@@ -82,10 +82,10 @@ RUN chmod +x  $APP_HOME/entrypoint.prod.sh
 COPY ./app $APP_HOME
 
 # chown all the files to the app user
-RUN chown -R ap_user:ap_group $APP_HOME
+RUN chown -R gdap_user:gdap_group $APP_HOME
 
 # change to the app user
-USER ap_user
+USER gdap_user
 
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]

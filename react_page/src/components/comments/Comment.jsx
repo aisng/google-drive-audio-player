@@ -14,6 +14,7 @@ const Comment = ({
   setActiveComment,
   parentId = null,
   currentAudioId,
+  handleCancel,
 }) => {
   // const [hasCancelButton, setHasCancelButton] = useState(false);
   const canReply = Boolean(currentUser.id);
@@ -39,10 +40,6 @@ const Comment = ({
 
   const handleUsernameClick = (url) => {
     window.location.href = url;
-  };
-
-  const handleCancel = () => {
-    setActiveComment(null);
   };
 
   return (
@@ -118,7 +115,7 @@ const Comment = ({
         <div className="replies">
           {replies.map((reply) => (
             <Comment
-              id={reply.id + "r"}
+              id={reply.id + "r"} // "r" for locating the comment from hash
               comment={reply}
               key={reply.id}
               replies={[]}

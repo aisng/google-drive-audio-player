@@ -4,16 +4,16 @@ import CursorPlugin from "wavesurfer.js/src/plugin/cursor";
 import AudioControls from "./AudioControls";
 import { CircularProgress } from "@mui/material/";
 const Waveform = ({ audio, onTimestampChange }) => {
-  // if (!audio) {
-  //   return (
-  //     <>
-  //       <AudioControls />
-  //       <div style={{ textAlign: "center", color: "red" }}>
-  //         <h2>Couldn't load audio</h2>
-  //       </div>
-  //     </>
-  //   );
-  // }
+  if (!audio) {
+    return (
+      <>
+        <AudioControls />
+        <div style={{ textAlign: "center", color: "red" }}>
+          <h2>Couldn't load audio</h2>
+        </div>
+      </>
+    );
+  }
   const containerRef = useRef(null);
   const waveSurferRef = useRef(null);
 
@@ -65,7 +65,6 @@ const Waveform = ({ audio, onTimestampChange }) => {
       cursorWidth: 0,
       normalize: true,
       partialRender: true,
-      // backend: "MediaElement",
       plugins: [
         CursorPlugin.create({
           showTime: true,
@@ -79,7 +78,7 @@ const Waveform = ({ audio, onTimestampChange }) => {
         }),
       ],
     });
-    // console.log(audio);
+
     if (!audio) {
       return () => waveSurfer.destroy();
     }
@@ -94,10 +93,6 @@ const Waveform = ({ audio, onTimestampChange }) => {
     waveSurfer.setVolume(volume);
     waveSurfer.on("ready", () => {
       setLoading(false);
-      // const peaks = waveSurfer.current.backend.getPeaks(300, 0, 300);
-      // const duration = waveSurfer.current.backend.getDuration();
-      // console.log({ peaks: JSON.stringify(peaks), duration, bpm: bpm.current });
-      // waveSurferRef.current = waveSurfer;
       updateDuration();
       updateCurrentTime();
     });

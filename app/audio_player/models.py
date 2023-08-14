@@ -35,14 +35,21 @@ class Comment(models.Model):
     class Meta:
         ordering = ["-date_created"]
 
-    def __str__(self):
+    @property
+    def short_body(self):
         return f"{self.body}" if len(self.body) <= 30 else f"{self.body[:30]}..."
 
     def get_replies(self):
         return self.replies.all()
+
+    def __str__(self):
+        return f"'{self.short_body}' / {self.user} / {self.id} "
 
 
 class Song(models.Model):
     id = models.CharField(primary_key=True, max_length=100)
     title = models.CharField("Title", max_length=150)
     path = models.CharField("Path", max_length=250, null=True, blank=True)
+
+    def __str__(self):
+        return self.title

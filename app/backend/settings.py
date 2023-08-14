@@ -28,7 +28,7 @@ DEBUG = bool(os.getenv("DEBUG"))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
-CSRF_COOKIE_DOMAIN = ["127.0.0.1", "localhost"]
+CSRF_COOKIE_DOMAIN = "127.0.0.1"
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:1337",
     "http://127.0.0.1:1337",

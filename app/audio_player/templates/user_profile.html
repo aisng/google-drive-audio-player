@@ -62,7 +62,7 @@
               {% for comment in user_comments %}
                 <tr>
                   <th scope="row">{{ comment.song.title }}</th>
-                  <td>{{ comment }}</td>
+                  <td>{{ comment.short_body }}</td>
                   <td>{{ comment.date_created }}</td>
                   <td>
                     <a href="{% url 'listen' %}#{{ comment.id }}c/{{ comment.song_id }}"
@@ -127,8 +127,8 @@
                     <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
                        href="{% url 'profile' username=reply.parent.user.username %}">{{ reply.parent.user.username }}</a>
                   </th>
-                  <td>{{ reply.parent }}</td>
-                  <td>{{ reply }}</td>
+                  <td>{{ reply.parent.short_body }}</td>
+                  <td>{{ reply.short_body }}</td>
                   <td>
                     <a href="{% url 'listen' %}#{{ reply.id }}r/{{ reply.parent.song_id }}"
                        id="see-reply"
