@@ -14,7 +14,11 @@ fi
 python manage.py makemigrations
 python manage.py migrate --no-input
 python manage.py collectstatic --no-input
-python manage.py createsuperuser --noinput --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL
+python manage.py shell <<EOF
+from django.contrib.auth.models import User
+superuser = User.objects.filter(username="$DJANGO_SUPERUSER_USERNAME", is_superuser=True)
+User.objects.create_superuser("$DJANGO_SUPERUSER_USERNAME", "$DJANGO_SUPERUSER_EMAIL", "$DJANGO_SUPERUSER_PASSWORD") if not superuser else print("SuperUser exists.")
+EOF
 
 
 exec "$@"
