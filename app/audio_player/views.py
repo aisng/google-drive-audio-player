@@ -4,7 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -110,13 +110,11 @@ def login_request(request):
     return render(request, "registration/login.html", context={"form": form})
 
 
-# def logout_request(request):
-#     logout(request)
-#     messages.info(request, "You have been succesfully logged out.")
-#     return render(request, "registration/logout.html")
-
-
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = "change_password.html"
     success_message = "Password changed succesfully."
-    success_url = reverse_lazy("profile")
+
+    def form_valid(self, form):
+        username = self.request.user.username
+        self.success_url = reverse_lazy("profile", kwargs={"username": username})
+        return super().form_valid(form)

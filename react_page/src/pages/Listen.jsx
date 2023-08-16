@@ -49,6 +49,7 @@ const Listen = () => {
             }}
           />
         )}
+
         {songs ? (
           <Playlist
             handleSongClick={handleSongClick}
@@ -63,6 +64,7 @@ const Listen = () => {
           </div>
         )}
       </div>
+
       <div className="comments-section">
         {songs && (
           <Comments

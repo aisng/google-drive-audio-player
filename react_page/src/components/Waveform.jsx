@@ -3,17 +3,8 @@ import WaveSurfer from "wavesurfer.js";
 import CursorPlugin from "wavesurfer.js/src/plugin/cursor";
 import AudioControls from "./AudioControls";
 import { CircularProgress } from "@mui/material/";
-const Waveform = ({ audio, onTimestampChange }) => {
-  if (!audio) {
-    return (
-      <>
-        <AudioControls />
-        <div style={{ textAlign: "center", color: "red" }}>
-          <h2>Couldn't load audio</h2>
-        </div>
-      </>
-    );
-  }
+
+const Waveform = ({ audio, onTimestampChange, onError }) => {
   const containerRef = useRef(null);
   const waveSurferRef = useRef(null);
 
@@ -21,8 +12,8 @@ const Waveform = ({ audio, onTimestampChange }) => {
   const [volume, setVolume] = useState(0.5);
   const [currentTime, setCurrentTIme] = useState("0:00");
   const [duration, setDuration] = useState("0:00");
-  const [loading, setLoading] = useState(true);
-  const [loadProgress, setLoadProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasErrors, setHasErrors] = useState(false);
 
   const formatTime = (timeInMs) => {
     return [
@@ -54,6 +45,9 @@ const Waveform = ({ audio, onTimestampChange }) => {
   };
 
   useEffect(() => {
+    if (hasErrors) {
+      return;
+    }
     const waveSurfer = WaveSurfer.create({
       container: containerRef.current,
       waveColor: "#727d87",
@@ -83,19 +77,24 @@ const Waveform = ({ audio, onTimestampChange }) => {
       return () => waveSurfer.destroy();
     }
     waveSurferRef.current = waveSurfer;
-
+    // try {
+    //   waveSurfer.load(audio);
+    // } catch {
+    //   console.error("blablababa");
+    //   return waveSurfer.destroy();
+    // }
     waveSurfer.load(audio);
-    waveSurfer.on("loading", (X, e) => {
-      setLoadProgress(X);
-      setLoading(true);
-      console.log(loading);
-    });
     waveSurfer.setVolume(volume);
     waveSurfer.on("ready", () => {
       setLoading(false);
       updateDuration();
       updateCurrentTime();
     });
+    waveSurfer.on("error", () => {
+      waveSurfer.destroy();
+      setHasErrors(true);
+    });
+
     waveSurfer.on("audioprocess", () => {
       updateCurrentTime();
     });
@@ -110,7 +109,7 @@ const Waveform = ({ audio, onTimestampChange }) => {
       setIsPlaying(false);
     });
 
-    // overwrite cursor plugin lib not to show miliseconds
+    // overwrite cursor plugin not to show miliseconds
     waveSurfer.cursor.formatTime = function formatTime(cursorTime) {
       cursorTime = isNaN(cursorTime) ? 0 : cursorTime;
       if (this.params.formatTimeCallback) {
@@ -143,7 +142,14 @@ const Waveform = ({ audio, onTimestampChange }) => {
           duration={duration}
         />
       )}
-      <div ref={containerRef} />
+
+      {!hasErrors ? (
+        <div ref={containerRef} />
+      ) : (
+        <div style={{ textAlign: "center", color: "red", width: "100%" }}>
+          <p>Audio type is not supported or the file was not found.</p>
+        </div>
+      )}
     </>
   );
 };

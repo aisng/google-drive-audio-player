@@ -205,10 +205,10 @@ nav li:hover {
   border-radius: 50%;
 }
 
-.comment-image-container {
+/* .comment-image-container {
   display: flex;
   align-self: center;
-}
+} */
 
 .comment-right-part {
   display: flex;

@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-import os.path
+import os
 import io
 
 from google.auth.transport.requests import Request
@@ -17,7 +17,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive",
 ]
 
-FOLDER_ID = "17HwgHtdEwr3LY83hAerjryX8rSnfWG5V"
+FOLDER_ID = os.environ.get("GOOGLE_DRIVE_FOLDER_ID")
 
 
 def get_file_list():
@@ -58,12 +58,11 @@ def get_file_list():
             .execute()
         )
         items = results.get("files", [])
-        # print(results)
+
         if not items:
             print("No files found.")
             return
-        # for item in items:
-        #     print("{0} ({1})".format(item["name"], item["id"]))
+
     except HttpError as error:
         # TODO(developer) - Handle errors from drive API.
         print(f"An error occurred: {error}")
@@ -131,10 +130,7 @@ def download_file(real_file_id):
             status, done = downloader.next_chunk()
             print(f"Dowload {int(status.progress()) * 100 }.")
             yield file.getvalue()
-
     except HttpError as error:
         print(f"There was an error: {error}")
         file = None
         return file
-    # print(type(file.getvalue()))
-    # return file.getvalue()
