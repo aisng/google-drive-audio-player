@@ -22,9 +22,17 @@ def index(request):
 @login_required
 def user_profile(request, username):
     user_profile_viewed = get_object_or_404(User, username=username)
-    if request.user.username == user_profile_viewed:
+    is_profile_owner = request.user == user_profile_viewed
+    print(is_profile_owner)
+    if is_profile_owner:
         user_comments = Comment.objects.filter(user=request.user, parent__isnull=True)
         user_replies = Comment.objects.filter(user=request.user, parent__isnull=False)
+        replies_to_owner = Comment.objects.filter(parent__user=request.user)
+        replies_to_owner_paginator = Paginator(replies_to_owner, 5)
+        replies_to_owner_page_number = request.GET.get("page_rep_own")
+        paged_replies_to_owner = replies_to_owner_paginator.get_page(
+            replies_to_owner_page_number
+        )
     else:
         user_comments = Comment.objects.filter(
             user=user_profile_viewed, parent__isnull=True
@@ -32,19 +40,23 @@ def user_profile(request, username):
         user_replies = Comment.objects.filter(
             user=user_profile_viewed, parent__isnull=False
         )
+        replies_to_owner = None
     comments_paginator = Paginator(user_comments, 5)
     replies_paginator = Paginator(user_replies, 5)
+
     comments_page_number = request.GET.get("page_comm")
     replies_page_number = request.GET.get("page_rep")
 
     paged_comments = comments_paginator.get_page(comments_page_number)
     paged_replies = replies_paginator.get_page(replies_page_number)
+
     return render(
         request,
         "user_profile.html",
         {
             "user_comments": paged_comments,
             "user_replies": paged_replies,
+            "replies_to_owner": paged_replies_to_owner if is_profile_owner else None,
             "user_profile_viewed": user_profile_viewed,
         },
     )

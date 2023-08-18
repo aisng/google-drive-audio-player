@@ -46,7 +46,7 @@
         <br />
       {% endif %}
 
-      <div>
+      <div class="container">
         <h4>Comments</h4>
 
         {% if user_comments %}
@@ -90,7 +90,8 @@
                     </li>
                   {% else %}
                     <li class="page-item">
-                      <a class="page-link" href="?page_comm={{ i }}&page_rep={{ request.GET.page_rep }}">{{ i }}</a>
+                      <a class="page-link"
+                         href="?page_comm={{ i }}&page_rep={{ request.GET.page_rep }}&page_rep_own={{ request.GET.page_rep_own }}">{{ i }}</a>
                     </li>
                   {% endif %}
 
@@ -155,7 +156,8 @@
                     </li>
                   {% else %}
                     <li class="page-item">
-                      <a class="page-link" href="?page_rep={{ i }}&page_comm={{ request.GET.page_comm }}">{{ i }}</a>
+                      <a class="page-link"
+                         href="?page_rep={{ i }}&page_comm={{ request.GET.page_comm }}&page_rep_own={{ request.GET.page_rep_own }}">{{ i }}</a>
                     </li>
                   {% endif %}
 
@@ -171,6 +173,66 @@
             <p>You have not yet replied to any comments.</p>
           {% else %}
             <p>{{ user_profile_viewed }} has not yet replied to any comments.</p>
+          {% endif %}
+        {% endif %}
+
+        {% if replies_to_owner %}
+          <h4>Replies to your comments</h4>
+          <table class="table mt-3 mb-3">
+            <thead>
+              <tr>
+                <th scope="col">Reply author</th>
+                <th scope="col">Reply</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+
+              {% for reply_to_owner in replies_to_owner %}
+                <tr>
+                  <th scope="row">
+                    <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                       href="{% url 'profile' username=reply_to_owner.user.username %}">{{ reply_to_owner.user.username }}</a>
+                  </th>
+                  <td>{{ reply_to_owner.short_body }}</td>
+                  <td>
+                    <a href="{% url 'listen' %}#{{ reply_to_owner.id }}r/{{ reply_to_owner.parent.song_id }}"
+                       id="see-reply"
+                       class="btn btn-secondary btn-sm"
+                       role="button">See reply</a>
+                  </td>
+                </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+
+          {% if replies_to_owner.has_other_pages %}
+            <ul class="pagination pagination-sm justify-content-end">
+
+              {% for i in replies_to_owner.paginator.page_range %}
+
+                {% if replies_to_owner.number == i %}
+                  <li class="page-item active">
+                    <a class="page-link">{{ i }}</a>
+                  </li>
+                {% else %}
+                  <li class="page-item">
+                    <a class="page-link"
+                       href="?page_rep_own={{ i }}&page_rep={{ request.GET.page_rep }}&page_comm={{ request.GET.page_comm }}">{{ i }}</a>
+                  </li>
+                {% endif %}
+
+              {% endfor %}
+
+            </ul>
+          {% endif %}
+
+        {% else %}
+
+          {% if user_profile_viewed == user %}
+            <h4>Replies to your comments</h4>
+            <p>Your comments have no replies.</p>
           {% endif %}
         {% endif %}
 

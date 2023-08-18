@@ -129,8 +129,10 @@ def download_file(real_file_id):
         while done is False:
             status, done = downloader.next_chunk()
             print(f"Dowload {int(status.progress()) * 100 }.")
-            yield file.getvalue()
+            error = False
+            return file.getvalue(), error
+            # yield file.getvalue()
     except HttpError as error:
         print(f"There was an error: {error}")
         file = None
-        return file
+        return file, error.reason

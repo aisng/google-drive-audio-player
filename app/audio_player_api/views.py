@@ -1,9 +1,10 @@
+from googleapiclient.errors import HttpError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError
 from .get_drive_data import get_file_list, download_file
-from django.http import StreamingHttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 from audio_player.models import Comment, Song
 import os
 from audio_player_api.serializers import (
@@ -37,16 +38,13 @@ def get_songs(request):
 
 @api_view(["GET"])
 def stream_song(request, id):
-    try:
-        next(download_file(id))
-    except StopIteration:
+    audio_file, error = download_file(id)
+    if not audio_file and error:
         return Response(
-            {"details": "The requested resource could not be found."},
+            {"details": error},
             status=status.HTTP_404_NOT_FOUND,
         )
-    # if not isinstance(next(download_file(id + "a")), (bytes, bytearray)):
-    #     return Response("Not found", status=404)
-    return StreamingHttpResponse(download_file(id), content_type="audio/mpeg")
+    return HttpResponse(audio_file, content_type="audio/mpeg")
 
 
 class SongDetail(generics.RetrieveAPIView):
