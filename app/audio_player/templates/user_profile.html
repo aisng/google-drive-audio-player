@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}
-  Profile Page
-{% endblock title %}
+{% block "title" %}{{ user_profile_viewed }}'s profile{% endblock %}
 
 {% block "head" %}
 
@@ -128,7 +126,15 @@
                 <tr>
                   <th scope="row">
                     <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                       href="{% url 'profile' username=reply.parent.user.username %}">{{ reply.parent.user.username }}</a>
+                       href="{% url 'profile' username=reply.parent.user.username %}">
+
+                      {% if reply.parent.user.username == user.username %}
+                        You
+                      {% else %}
+                        {{ reply.parent.user.username }}
+                      {% endif %}
+
+                    </a>
                   </th>
                   <td>{{ reply.parent.short_body }}</td>
                   <td>{{ reply.short_body }}</td>
@@ -192,7 +198,15 @@
                 <tr>
                   <th scope="row">
                     <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                       href="{% url 'profile' username=reply_to_owner.user.username %}">{{ reply_to_owner.user.username }}</a>
+                       href="{% url 'profile' username=reply_to_owner.user.username %}">
+
+                      {% if reply_to_owner.user.username == user.username %}
+                        You
+                      {% else %}
+                        {{ reply_to_owner.user.username }}
+                      {% endif %}
+
+                    </a>
                   </th>
                   <td>{{ reply_to_owner.short_body }}</td>
                   <td>

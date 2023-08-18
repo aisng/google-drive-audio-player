@@ -3,53 +3,51 @@ from rest_framework import serializers
 from audio_player.models import Comment, Song, User
 
 
+class UserSerializer(serializers.ModelSerializer):
+    profile_pic_url = serializers.SerializerMethodField()
+    profile_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ("id", "username", "profile_pic_url", "profile_url")
+
+    def get_profile_pic_url(self, instance):
+        request = self.context.get("request")
+        if instance.profile.profile_pic:
+            profile_pic_url = instance.profile.profile_pic.url
+            return request.build_absolute_uri(profile_pic_url)
+        return None
+
+    def get_profile_url(self, instance):
+        request = self.context.get("request")
+        if instance.username:
+            profile_url = reverse("profile", kwargs={"username": instance.username})
+            return request.build_absolute_uri(profile_url)
+        return None
+
+
 class CommentSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(write_only=False)
+    author = UserSerializer(source="user", read_only=True)
+    user_id = serializers.IntegerField(write_only=True)
     song_id = serializers.CharField(write_only=False, allow_null=True)
     parent_id = serializers.IntegerField(write_only=False, allow_null=True)
-    username = serializers.SerializerMethodField(write_only=False)
-    user_profile_pic = serializers.SerializerMethodField()
-    user_profile_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
         fields = (
             "id",
             "user_id",
-            "username",
             "body",
             "parent_id",
             "song_id",
             "date_created",
-            "user_profile_pic",
             "timestamp",
-            "user_profile_url",
+            "author",
         )
 
     def get_parent_id(self, instance):
         if instance.parent:
             return instance.parent.id
-        return None
-
-    def get_username(self, instance):
-        if instance.user:
-            return instance.user.username
-        return None
-
-    def get_user_profile_pic(self, instance):
-        request = self.context.get("request")
-        if instance.user:
-            profile_pic_url = instance.user.profile.profile_pic.url
-            return request.build_absolute_uri(profile_pic_url)
-        return None
-
-    def get_user_profile_url(self, instance):
-        request = self.context.get("request")
-        if instance.user:
-            profile_url = reverse(
-                "profile", kwargs={"username": instance.user.username}
-            )
-            return request.build_absolute_uri(profile_url)
         return None
 
     def create(self, validated_data):
@@ -60,21 +58,6 @@ class CommentSerializer(serializers.ModelSerializer):
             comment.parent = parent_comment
             comment.save()
         return comment
-
-
-class UserSerializer(serializers.ModelSerializer):
-    profile_pic = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ("id", "username", "profile_pic")
-
-    def get_profile_pic(self, instance):
-        request = self.context.get("request")
-        if instance.profile.profile_pic:
-            profile_pic_url = instance.profile.profile_pic.url
-            return request.build_absolute_uri(profile_pic_url)
-        return None
 
 
 class SongSerializer(serializers.ModelSerializer):

@@ -23,7 +23,6 @@ def index(request):
 def user_profile(request, username):
     user_profile_viewed = get_object_or_404(User, username=username)
     is_profile_owner = request.user == user_profile_viewed
-    print(is_profile_owner)
     if is_profile_owner:
         user_comments = Comment.objects.filter(user=request.user, parent__isnull=True)
         user_replies = Comment.objects.filter(user=request.user, parent__isnull=False)

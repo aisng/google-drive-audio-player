@@ -16,10 +16,9 @@ const Comment = ({
   currentAudioId,
   handleCancel,
 }) => {
-  // const [hasCancelButton, setHasCancelButton] = useState(false);
   const canReply = Boolean(currentUser.id);
-  const canEdit = currentUser.id === comment.userId;
-  const canDelete = currentUser.id === comment.userId;
+  const canEdit = currentUser.id === comment.author.id;
+  const canDelete = currentUser.id === comment.author.id;
 
   const createdAt =
     new Date(comment.dateCreated).toLocaleDateString("lt-LT") +
@@ -51,10 +50,10 @@ const Comment = ({
         <div className="comment-right-part">
           <div className="comment-content">
             <span
-              onClick={() => handleUsernameClick(comment.userProfileUrl)}
+              onClick={() => handleUsernameClick(comment.author.profileUrl)}
               className="comment-author"
             >
-              {comment.username}
+              {comment.author.username}
             </span>
             {comment.timestamp && (
               <p className="comment-timestamp">at {comment.timestamp} </p>
@@ -119,7 +118,7 @@ const Comment = ({
               comment={reply}
               key={reply.id}
               replies={[]}
-              userIcon={reply.userProfilePic}
+              userIcon={reply.author.profilePicUrl}
               currentUser={currentUser}
               addComment={addComment}
               updateComment={updateComment}

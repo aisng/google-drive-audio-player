@@ -47,8 +47,8 @@ const Comments = ({
       song_id: currentSongId,
     };
     createComment(commentData).then((response) => {
-      console.log("SENT", commentData);
-      console.log("RECEIVED", response.data);
+      // console.log("SENT", commentData);
+      // console.log("RECEIVED", response.data);
       setBackendComments([response.data, ...backendComments]);
       setActiveComment(null);
     });
@@ -70,8 +70,6 @@ const Comments = ({
 
   const handleCommentUpdate = (commentId, text) => {
     updateComment(commentId, { body: text }).then((response) => {
-      console.log(response);
-
       const updatedBackendComments = backendComments.map((backendComment) => {
         if (backendComment.id === commentId) {
           return { ...backendComment, body: text };
@@ -130,8 +128,6 @@ const Comments = ({
         handleSubmit={handleCommentSubmit}
         currentSongId={currentSongId}
         timestamp={timestamp}
-        // onFocus={() => setHasCancelButton(true)}
-        // hasCancelButton
         handleCancel={handleCancel}
       />
       <h3 className="comments-title">Comments</h3>
@@ -141,7 +137,7 @@ const Comments = ({
             id={rootComment.id + "c"} // + "c" for locating the comment from hash
             key={rootComment.id}
             comment={rootComment}
-            userIcon={rootComment.userProfilePic}
+            userIcon={rootComment.author.profilePicUrl}
             replies={getReplies(rootComment.id)}
             currentUser={currentUser}
             deleteComment={handleCommentDelete}
