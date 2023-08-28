@@ -15,7 +15,7 @@ As of now there are two docker envirnoments: one for development (where React pa
 - `.env.dev` for development
 - `.env.prod` together with `.env.prod.db` for production
 
-Notice that in the examples below the **PostgreSQL** username is *ap_user* in development and *gdap_user* in production.
+Notice that in the examples below the **PostgreSQL** username is *ap_user* in development and *gdap_user* in production with the same password *44use98* used for both environments.
 
 1. For development the `.env.dev` should be placed in the root directory (together with `docker-compose.yml` file) and have the following variables:
 ```bash
