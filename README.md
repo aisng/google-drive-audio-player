@@ -11,8 +11,12 @@ In order to use this app one has to have an account in https://console.cloud.goo
 3. Rename the file to `credentials.json` and place it in `app/audio_player_api/`.
 
 ### Environment setup
-As of now there are two docker envirnoments: one for development (where React page runs on vite dev server with hot reload) and one for production (where React is bundled to static files and is served to Django via nginx). Both environments require .env files:
-`.env.dev` for development and `.env.prod` together with `.env.prod.db` for production.
+As of now there are two docker envirnoments: one for development (where React page runs on vite dev server with hot reload) and one for production (where React is bundled to static files and is served to Django via nginx). Both environments require `.env` files:
+- `.env.dev` for development
+- `.env.prod` together with `.env.prod.db` for production
+
+Notice that in the examples below the *psql* username is `ap_user` in development and `gdap_user` in production.
+
 1. For development the `.env.dev` should be placed in the root directory (together with `docker-compose.yml` file) and have the following variables:
 ```bash
 DEBUG=1
@@ -37,18 +41,16 @@ DJANGO_SUPERUSER_EMAIL=<django_superuser_email>
 DJANGO_SUPERUSER_PASSWORD=<django_superuser_password>
 GOOGLE_DRIVE_FOLDER_ID=<id_of_folder_with_audio_files>
 ```
-2. Production environment runs smoother as there is no need to run both Django and React dev servers. The `.env.prod` must have the same vars as `.env.prod` with few differences:
+2. Production environment runs a bit smoother as there is no need to run both Django and React dev servers. The `.env.prod` must have the same vars as `.env.prod` with few differences:
 ```bash
 DEBUG=0 # debug is set to false
-SECRET_KEY=<your_secret_key>
-DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+...
 API_URL=http://127.0.0.1:1337/api # notice the nginx port number
-SQL_ENGINE=django.db.backends.postgresql
-SQL_DATABASE=audio-player-db # different db name, must match POSTGRES_DB in .env.prod.db
+...
+SQL_DATABASE=audio-player-db # different db name than in dev, must match POSTGRES_DB in .env.prod.db
 SQL_USER=gdap_user # must match POSTGRES_USER in .env.prod.db 
 SQL_PASSWORD=44use98 # must match POSTGRES_PASSWORD in .env.prod.db 
-SQL_HOST=db
-SQL_PORT=5432
+...
 ```
 
 There is also a separate file for database service environment `.env.prod.db` which has the following vars (same as the ones passed to `docker-compose.yml` in dev mode):
@@ -58,22 +60,22 @@ POSTGRES_PASSWORD=44use98 # must match SQL_PASSWORD in .env.prod
 POSTGRES_DB=audio-player-db # must match SQL_DATABASE in .env.prod
 ```
 
-If you are changing the db user credentials in prod environment, make sure to change the following lines in app/Dockerfile.prod:
+If you are changing the db user credentials in prod environment, make sure to change the following lines in app/Dockerfile.prod so that the updated db service user matches `<username>`:
 1. Line 54 
 ```bash
-RUN addgroup --system <group_name> && adduser --system --group <user_name>
+RUN addgroup --system <group_name> && adduser --system --group <username>
 ```
 2. Line 73
 ```bash
-COPY --from=builder2 --chown=<user_name>:<group_name> /usr/src/app/dist/ ./staticfiles
+COPY --from=builder2 --chown=<username>:<group_name> /usr/src/app/dist/ ./staticfiles
 ```
 3. Line 84
 ```bash
-RUN chown -R <user_name>:<group_name> $APP_HOME
+RUN chown -R <username>:<group_name> $APP_HOME
 ```
 4. Line 87
 ```bash
-USER <user_name>
+USER <username>
 ```
 
 ### NB!
