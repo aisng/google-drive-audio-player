@@ -11,9 +11,10 @@ In order to use this app one has to have an account in https://console.cloud.goo
 3. Rename the file to `credentials.json` and place it in `app/audio_player_api/`.
 
 ### Environment setup
-As of now there are two docker envirnoments: one for development (where React page runs on vite dev server with hot reload) and one for production (where React is bundled to static files and is served to Django via nginx). Both environments require `.env` files:
+As of now there are two docker envirnoments: one for development (where React page runs on vite dev server with hot reload) and one for production (where React is bundled to static files and is served to Django via nginx). Both environments require `.env` files located within the root directory (together with `docker-compose.yml` and `docker-compose.prod.yml` files):
 - `.env.dev` for development
 - `.env.prod` together with `.env.prod.db` for production
+
 
 Notice that in the examples below the **PostgreSQL** username is *ap_user* in development and *gdap_user* in production with the same password *44use98* used for both environments.
 
