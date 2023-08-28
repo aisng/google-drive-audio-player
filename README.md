@@ -54,12 +54,13 @@ SQL_PASSWORD=44use98 # must match POSTGRES_PASSWORD in .env.prod.db
 ...
 ```
 
-There is also a separate file for database service environment `.env.prod.db` which has the following vars (same as the ones passed to `docker-compose.yml` in dev mode):
+There is also a separate file for database service environment `.env.prod.db` which has the following vars (that are the same as the ones passed to `docker-compose.yml` which spins up the dev containers):
 ```bash
 POSTGRES_USER=gdap_user # must match SQL_USER in .env.prod
 POSTGRES_PASSWORD=44use98 # must match SQL_PASSWORD in .env.prod
 POSTGRES_DB=audio-player-db # must match SQL_DATABASE in .env.prod
 ```
+
 
 If you are changing the db user credentials in prod environment, make sure to change the following lines in app/Dockerfile.prod so that the updated db service user matches `<username>` that gets priviliges within the container. You might as well want to choose a more appropriate `<group_name>`:
 1. Line 54 
@@ -77,6 +78,16 @@ RUN chown -R <username>:<group_name> $APP_HOME
 4. Line 87
 ```bash
 USER <username>
+```
+
+### Running the containers
+1. Developement:
+```bash
+docker compose up 
+```
+2. Production:
+```bash
+docker compose -f docker-compose.prod.yml up 
 ```
 
 ### NB!
