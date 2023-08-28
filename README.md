@@ -96,4 +96,4 @@ app/entrypoint.prod.sh script runs the migrations everytime the prod containers 
 ## Known issues
 1. Deleting User or UserProfile model instances might crash the app as the `on_delete` properties are not configured properly.
 2. Deleting Comment model instances via Axios request in React leaves orphan comments. Related to the first issue.
-3. Longer audio files might be slow to load (~2 seconds for ~18 minutes in prod env) as I couldn't yet figure out how to receive audio data in chunks with Wavesurfer.js player.
+3. Longer audio files might be slow to load (~2 seconds for ~18 minutes .mp3 in prod env) as I couldn't yet figure out how to receive audio data in chunks with Wavesurfer.js player.
