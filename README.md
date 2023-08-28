@@ -15,7 +15,7 @@ As of now there are two docker envirnoments: one for development (where React pa
 - `.env.dev` for development
 - `.env.prod` together with `.env.prod.db` for production
 
-Notice that in the examples below the *psql* username is `ap_user` in development and `gdap_user` in production.
+Notice that in the examples below the **PostgreSQL** username is *ap_user* in development and *gdap_user* in production.
 
 1. For development the `.env.dev` should be placed in the root directory (together with `docker-compose.yml` file) and have the following variables:
 ```bash
@@ -60,7 +60,7 @@ POSTGRES_PASSWORD=44use98 # must match SQL_PASSWORD in .env.prod
 POSTGRES_DB=audio-player-db # must match SQL_DATABASE in .env.prod
 ```
 
-If you are changing the db user credentials in prod environment, make sure to change the following lines in app/Dockerfile.prod so that the updated db service user matches `<username>`:
+If you are changing the db user credentials in prod environment, make sure to change the following lines in app/Dockerfile.prod so that the updated db service user matches `<username>` that gets priviliges within the container. You might as well want to choose a more appropriate `<group_name>`:
 1. Line 54 
 ```bash
 RUN addgroup --system <group_name> && adduser --system --group <username>
