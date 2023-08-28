@@ -18,7 +18,7 @@ As of now there are two docker envirnoments: one for development (where React pa
 
 Notice that in the examples below the **PostgreSQL** username is *ap_user* in development and *gdap_user* in production with the same password *44use98* used for both environments.
 
-1. For development the `.env.dev` should be placed in the root directory (together with `docker-compose.yml` file) and have the following variables:
+1. For development the `.env.dev` should have the following variables:
 ```bash
 DEBUG=1
 SECRET_KEY=<your_secret_key>
