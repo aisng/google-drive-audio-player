@@ -5,3 +5,4 @@ Dockerfile.*
 .swc
 **/*__pycache__
 **/.git/**
+**/venv/

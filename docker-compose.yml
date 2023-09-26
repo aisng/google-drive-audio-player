@@ -27,6 +27,8 @@ services:
       - db
     env_file:
       - ./.env.dev
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=./service_key.json
 
   db:
     container_name: ap-db-dev
