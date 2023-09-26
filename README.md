@@ -6,7 +6,7 @@ Hybrid Django and React application for playing audio files from Google Drive. R
 
 ### Google Cloud account setup
 
-In order to use this app one has to have an account in https://console.cloud.google.com/ with Google Drive API service enabled.
+In order to use this app one has to have an account at https://console.cloud.google.com/ with Google Drive API service enabled. Refer to official documentation at https://cloud.google.com/docs for more info on the rough guidelines below.
 
 1. Create a project in https://console.cloud.google.com/
 2. Create a Service Account.
