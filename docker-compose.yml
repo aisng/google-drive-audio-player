@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   react:
     container_name: ap-react-dev
