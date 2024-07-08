@@ -1,0 +1,4 @@
+app/audio_player_api/service_key.json
+*/.venv
+.env.dev
+.env.prod
