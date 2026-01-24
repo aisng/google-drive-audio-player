@@ -1,6 +1,10 @@
+name: google-drive-audio-player
+
 services:
+  # Development services
   react:
-    container_name: ap-react-dev
+    profiles: ["dev"]
+    container_name: gdap-react-dev
     build:
       context: ./react_page
       dockerfile: Dockerfile.dev
@@ -13,7 +17,8 @@ services:
       - /app/node_modules
 
   django:
-    container_name: ap-django-dev
+    profiles: ["dev"]
+    container_name: gdap-django-dev
     build:
       context: ./app
       dockerfile: Dockerfile.dev
@@ -22,21 +27,69 @@ services:
     volumes:
       - ./app:/app
     depends_on:
-      - db
+      - db-dev
     env_file:
       - ./.env.dev
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=./service_key.json
 
-  db:
-    container_name: ap-db-dev
+  db-dev:
+    profiles: ["dev"]
+    container_name: gdap-db-dev
     image: postgres:15
     volumes:
-      - postgres_data:/var/lib/postresql/data/
-    environment:
-      - POSTGRES_USER=ap_user
-      - POSTGRES_PASSWORD=44use98
-      - POSTGRES_DB=ap-db-dev
+      - postgres_data_dev:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.dev
+
+  # Production services
+  web:
+    profiles: ["prod"]
+    container_name: gdap-web
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile.prod
+      args:
+        VITE_APP_API_ADDRESS: http://127.0.0.1:1337/api/
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/audio_player/media/profile_pics
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+
+  db:
+    profiles: ["prod"]
+    container_name: gdap-db
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod
+
+  nginx:
+    profiles: ["prod"]
+    container_name: gdap-nginx
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/audio_player/media/profile_pics
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+networks:
+  default:
+    name: gdap-network
+    driver: bridge
 
 volumes:
+  postgres_data_dev:
   postgres_data:
+  static_volume:
+  media_volume:

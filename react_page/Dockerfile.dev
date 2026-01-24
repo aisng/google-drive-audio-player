@@ -7,7 +7,7 @@ COPY package.json ./
 RUN npm install
 # RUN NODE_OPTIONS="--max-old-space-size=4096"
 
-COPY . .
+COPY . ./
 
 ARG VITE_APP_API_ADDRESS
 ENV VITE_APP_API_ADDRESS $VITE_APP_API_ADDRESS
