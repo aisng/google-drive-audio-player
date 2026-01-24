@@ -13,84 +13,58 @@ In order to use this app one has to have an account at https://console.cloud.goo
 3. Create a Service Account Key, download the `.json` file.
 4. Rename the file to `service_key.json` and place it in `app/audio_player_api/`.
 5. Share the Google Drive folder containing audio files with the Service Account email.
+6. Get the folder ID from the browser URL when viewing the folder:
+   ```
+   https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE
+   ```
+   Copy the ID after `/folders/` and use it for the `GOOGLE_DRIVE_FOLDER_ID` environment variable.
 
 ### Environment setup
 
-As of now there are two docker envirnoments: one for development (where React page runs on vite dev server with hot reload) and one for production (where React is bundled to static files and is served to Django via nginx). Both environments require `.env` files located within the root project directory (same location as `docker-compose.yml` and `docker-compose.prod.yml`):
+Two Docker environments are available via a single `docker-compose.yml`:
+- **Development**: React on Vite dev server with hot reload, PostgreSQL database
+- **Production**: React bundled to static files served via Django + Nginx, PostgreSQL database
+
+Each environment requires its own `.env` file in the root project directory:
 
 - `.env.dev` for development
-- `.env.prod` together with `.env.prod.db` for production
+- `.env.prod` for production
 
-Notice that in the examples below the **PostgreSQL** username is _ap_user_ in development and _gdap_user_ in production with the same password _44use98_ used for both environments.
-
-1. For development the `.env.dev` should have the following variables:
+Copy the example files and fill in your actual values:
 
 ```bash
-DEBUG=1
-SECRET_KEY=<your_secret_key>
-DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
-API_URL=http://127.0.0.1:8000/api
-SQL_ENGINE=django.db.backends.postgresql
-SQL_DATABASE=ap-db-dev
-SQL_USER=ap_user # must match docker-compose.yml db env var
-SQL_PASSWORD=44use98 # must match docker-compose.yml db env var
-SQL_HOST=db
-SQL_PORT=5432
-DATABASE=postgres
-# EMAIL_* vars are used to send password reset instructions to the user
-EMAIL_USERNAME=<your_email>
-EMAIL_PASSWORD=<your_email_password>
-EMAIL_HOST=<your_email_host>
-EMAIL_PORT=<your_email_port>
-EMAIL_USE_TLS=1
-DJANGO_SUPERUSER_USERNAME=admin
-DJANGO_SUPERUSER_EMAIL=<django_superuser_email>
-DJANGO_SUPERUSER_PASSWORD=<django_superuser_password>
-GOOGLE_DRIVE_FOLDER_ID=<id_of_folder_with_audio_files>
+cp .env.dev.example .env.dev
+cp .env.prod.example .env.prod
 ```
 
-2. Production environment runs a bit smoother as there is no need to run both Django and React dev servers. The `.env.prod` must have the same vars as `.env.prod` with few differences:
+Refer to `.env.dev.example` and `.env.prod.example` for all required variables and descriptions.
 
+**Note:** If you get "permission denied" errors on entrypoint scripts, ensure they have execute permissions:
 ```bash
-DEBUG=0 # debug is set to false
-...
-API_URL=http://127.0.0.1:1337/api # notice the nginx port number
-...
-SQL_DATABASE=audio-player-db # different db name than in dev, must match POSTGRES_DB in .env.prod.db
-SQL_USER=gdap_user # must match POSTGRES_USER in .env.prod.db
-SQL_PASSWORD=44use98 # must match POSTGRES_PASSWORD in .env.prod.db
-...
+chmod +x app/entrypoint.dev.sh app/entrypoint.prod.sh
 ```
 
-There is also a separate file for database service environment `.env.prod.db` which has the following vars (that are the same as the ones passed to `docker-compose.yml` which spins up the dev containers):
+If you change the database user credentials in production, update the following in `app/Dockerfile.prod`:
 
-```bash
-POSTGRES_USER=gdap_user # must match SQL_USER in .env.prod
-POSTGRES_PASSWORD=44use98 # must match SQL_PASSWORD in .env.prod
-POSTGRES_DB=audio-player-db # must match SQL_DATABASE in .env.prod
-```
-
-If you are changing the db user credentials in prod environment, make sure to change the following lines in app/Dockerfile.prod so that the updated db service user matches `<username>` that gets priviliges within the container. You might as well want to choose a more appropriate `<group_name>`:
-
-1. Line 54
+1. Line 54 - Change `<username>` and `<group_name>`:
 
 ```bash
 RUN addgroup --system <group_name> && adduser --system --group <username>
 ```
 
-2. Line 73
+2. Line 73 - Update `<username>:<group_name>`:
 
 ```bash
 COPY --from=builder2 --chown=<username>:<group_name> /usr/src/app/dist/ ./staticfiles
 ```
 
-3. Line 84
+3. Line 84 - Update `<username>:<group_name>`:
 
 ```bash
 RUN chown -R <username>:<group_name> $APP_HOME
 ```
 
-4. Line 87
+4. Line 87 - Change `<username>`:
 
 ```bash
 USER <username>
@@ -98,17 +72,35 @@ USER <username>
 
 ### Running the containers
 
-1. Developement:
+Development:
 
 ```bash
-docker compose up
+docker compose --profile dev up
 ```
 
-2. Production:
+Production:
 
 ```bash
-docker compose -f docker-compose.prod.yml up
+docker compose --profile prod up
 ```
+
+To rebuild containers, add the `--build` flag:
+
+```bash
+docker compose --profile dev up --build
+docker compose --profile prod up --build
+```
+
+### Accessing the application
+
+Once the containers are running:
+
+- **Development**: http://127.0.0.1:8000 (Django development server)
+  - React dev server: http://127.0.0.1:5173
+  - Django API: http://127.0.0.1:8000/api/
+
+- **Production**: http://127.0.0.1:1337 (via Nginx)
+  - All requests (frontend + API) served through Nginx
 
 ### NB!
 
