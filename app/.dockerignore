@@ -1,8 +1,48 @@
-**/*node_modules
-**/*react_page
-Dockerfile.*
-.dockerignore
-.swc
-**/*__pycache__
-**/.git/**
-**/venv/
+# Virtual environments
+.venv
+venv
+env
+ENV
+
+# Python cache
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/staticfiles
+/mediafiles
+
+# Development
+.git
+.gitignore
+.env
+.env.*
+*.md
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
