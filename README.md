@@ -55,7 +55,7 @@ RUN addgroup --system <group_name> && adduser --system --group <username>
 2. Line 73 - Update `<username>:<group_name>`:
 
 ```bash
-COPY --from=builder2 --chown=<username>:<group_name> /usr/src/app/dist/ ./staticfiles
+COPY --from=builder2 --chown=<username>:<group_name> /usr/src/app/dist/ ./staticfiles/
 ```
 
 3. Line 84 - Update `<username>:<group_name>`:
