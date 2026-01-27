@@ -49,7 +49,6 @@ def stream_song(request, id):
 
 class SongDetail(generics.RetrieveAPIView):
     serializer_class = SongSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return Song.objects.get(pk=self.kwargs["pk"])

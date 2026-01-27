@@ -51,7 +51,7 @@ services:
       dockerfile: ./app/Dockerfile.prod
       args:
         VITE_APP_API_ADDRESS: http://127.0.0.1:1337/api/
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/audio_player/media/profile_pics
