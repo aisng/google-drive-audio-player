@@ -1,9 +1,42 @@
-app/audio_player_api/service_key.json
-*/.venv
+# Environment files
 .env.dev
 .env.prod
 .env.prod.db
 
 # But DO track example files for reference
 !.env.*.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+
+# Virtual environments
+*/.venv
+venv/
+env/
+
+# Credentials
+app/audio_player_api/service_key.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 
