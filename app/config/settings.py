@@ -46,16 +46,20 @@ CORS_ALLOW_CREDENTIALS = True
 # Application definition
 
 INSTALLED_APPS = [
-    "audio_player",
-    "rest_framework",
-    "corsheaders",
-    # "bootstrap5",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third-party
+    "rest_framework",
+    "corsheaders",
+    # Local apps
+    "accounts",
+    "songs",
+    "integrations.google_drive",
+    "api",
 ]
 
 MIDDLEWARE = [
@@ -155,7 +159,7 @@ STATIC_URL = "static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "audio_player/media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 MEDIA_URL_PROFILE_PICS = "/media/profile_pics/"
 # Default primary key field type
