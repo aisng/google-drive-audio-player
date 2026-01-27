@@ -1,0 +1,26 @@
+[project]
+name = "gdap"
+version = "0.1.0"
+description = "Google Drive Audio Player"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=4.2,<5.0",
+    "django-bootstrap-v5>=1.0",
+    "django-cors-headers>=4.1",
+    "django-resized>=1.0",
+    "djangorestframework>=3.14",
+    "djangorestframework-camel-case>=1.4",
+    "google-api-python-client>=2.91",
+    "google-auth>=2.21",
+    "google-auth-oauthlib>=1.0",
+    "gunicorn>=21.2",
+    "pillow>=9.5",
+    "psycopg2-binary>=2.9",
+    "pyjwt>=2.8",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1",
+]
