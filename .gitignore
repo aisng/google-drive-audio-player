@@ -24,7 +24,7 @@ venv/
 env/
 
 # Credentials
-app/audio_player_api/service_key.json
+**/service_key.json
 
 # IDE
 .vscode/
