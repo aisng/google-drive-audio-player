@@ -29,13 +29,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # path(
-    #     "listen/",
-    #     login_required(TemplateView.as_view(template_name="react_page.html")),
-    #     name="listen",
-    # ),
-    path("", include("audio_player.urls")),  # Currently empty - template views disabled
-    path("api/", include("audio_player_api.urls")),
+    path("api/", include("api.urls")),
 ]
 
 # Static/media file serving (commented out - API only, no static files)

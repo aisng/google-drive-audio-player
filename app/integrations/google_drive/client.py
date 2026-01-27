@@ -18,7 +18,7 @@ SCOPES = [
 
 FOLDER_ID = os.environ.get("GOOGLE_DRIVE_FOLDER_ID")
 try:
-    SERVICE_ACCOUNT_FILE = "audio_player_api/service_key.json"
+    SERVICE_ACCOUNT_FILE = "integrations/google_drive/service_key.json"
     creds = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES
     )

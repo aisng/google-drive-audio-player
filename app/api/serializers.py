@@ -1,28 +1,20 @@
-from django.urls import reverse
 from rest_framework import serializers
-from audio_player.models import Comment, Song, User
+from django.contrib.auth.models import User
+from songs.models import Comment, Song
 
 
 class UserSerializer(serializers.ModelSerializer):
     profile_pic_url = serializers.SerializerMethodField()
-    profile_url = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ("id", "username", "profile_pic_url", "profile_url")
+        fields = ("id", "username", "profile_pic_url")
 
     def get_profile_pic_url(self, instance):
         request = self.context.get("request")
         if instance.profile.profile_pic:
             profile_pic_url = instance.profile.profile_pic.url
             return request.build_absolute_uri(profile_pic_url)
-        return None
-
-    def get_profile_url(self, instance):
-        request = self.context.get("request")
-        if instance.username:
-            profile_url = reverse("profile", kwargs={"username": instance.username})
-            return request.build_absolute_uri(profile_url)
         return None
 
 

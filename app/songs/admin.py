@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import UserProfile, Comment, Song
+from .models import Comment, Song
 
 
 class CommentAdmin(admin.ModelAdmin):
-    # readonly_fields = ("user", "parent", "song", "date_created")
     list_display = (
         "comment_body",
         "comment_author",
@@ -42,7 +41,6 @@ class Reply(Comment):
 
 
 class ReplyAdmin(admin.ModelAdmin):
-    # readonly_fields = ("user", "parent", "song", "date_created")
     list_display = (
         "reply_body",
         "reply_author",
@@ -91,8 +89,6 @@ class SongAdmin(admin.ModelAdmin):
     )
 
 
-# Register your models here.
-admin.site.register(UserProfile)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Reply, ReplyAdmin)
 admin.site.register(Song, SongAdmin)

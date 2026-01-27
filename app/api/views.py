@@ -1,17 +1,14 @@
-from googleapiclient.errors import HttpError
+import os
+
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError
-from .get_drive_data import get_file_list, download_file
-from django.http import HttpResponse, StreamingHttpResponse
-from audio_player.models import Comment, Song
-import os
-from audio_player_api.serializers import (
-    UserSerializer,
-    CommentSerializer,
-    SongSerializer,
-)
+
+from songs.models import Comment, Song
+from integrations.google_drive.client import get_file_list, download_file
+from .serializers import UserSerializer, CommentSerializer, SongSerializer
 
 API_URL = os.environ.get("API_URL")
 
